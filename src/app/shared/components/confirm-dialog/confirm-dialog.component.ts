@@ -15,10 +15,22 @@ import { ConfirmDialogConfig } from '../../../core/models';
       <p>{{ data.message }}</p>
 
       <div class="dialog__actions">
-        <button type="button" class="dialog__button dialog__button--ghost" (click)="close()">
+        <button
+          type="button"
+          class="dialog__button"
+          [class.dialog__button--danger]="isCancelDestructive()"
+          [class.dialog__button--ghost]="!isCancelDestructive()"
+          (click)="close()"
+        >
           {{ data.cancelLabel }}
         </button>
-        <button type="button" class="dialog__button dialog__button--danger" (click)="confirm()">
+        <button
+          type="button"
+          class="dialog__button"
+          [class.dialog__button--danger]="!isCancelDestructive()"
+          [class.dialog__button--ghost]="isCancelDestructive()"
+          (click)="confirm()"
+        >
           {{ data.confirmLabel }}
         </button>
       </div>
@@ -100,5 +112,9 @@ export class ConfirmDialogComponent {
 
   protected confirm(): void {
     this.dialogRef.close('confirm');
+  }
+
+  protected isCancelDestructive(): boolean {
+    return this.data.destructiveAction === 'cancel';
   }
 }

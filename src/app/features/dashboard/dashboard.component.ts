@@ -9,7 +9,7 @@ import { startBallotSession, startPreferenceSession } from '../../store/current-
 import { selectElection } from '../../store/reference-data/reference-data.selectors';
 import { deleteSession } from '../../store/session-history/session-history.actions';
 import { selectSessionsSorted } from '../../store/session-history/session-history.selectors';
-import { openConfirmDialog } from '../../store/ui/ui.actions';
+import { navigateToCountRoute, openConfirmDialog } from '../../store/ui/ui.actions';
 import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
 
 @Component({
@@ -238,13 +238,51 @@ export class DashboardComponent {
   protected readonly currentSession = this.store.selectSignal(selectCurrentSessionEntity);
 
   protected startBallot(): void {
+    const draft = this.currentSession();
+
+    if (draft && draft.status === 'draft' && draft.mode === 'ballots') {
+      this.store.dispatch(
+        openConfirmDialog({
+          config: {
+            title: 'Има незавършен драфт',
+            message: 'Имате незавършено броене на бюлетини. Искате ли да го отворите или да започнете ново?',
+            confirmLabel: 'Отвори драфта',
+            cancelLabel: 'Ново броене',
+            confirmAction: navigateToCountRoute.type,
+            payload: { mode: 'ballots' },
+            cancelAction: startBallotSession.type,
+            destructiveAction: 'cancel',
+          },
+        }),
+      );
+      return;
+    }
+
     this.store.dispatch(startBallotSession());
-    void this.router.navigateByUrl('/ballot-count');
   }
 
   protected goToPreferences(): void {
+    const draft = this.currentSession();
+
+    if (draft && draft.status === 'draft' && draft.mode === 'preferences') {
+      this.store.dispatch(
+        openConfirmDialog({
+          config: {
+            title: 'Има незавършен драфт',
+            message: 'Имате незавършено преброяване на преференции. Искате ли да го отворите или да започнете ново?',
+            confirmLabel: 'Отвори драфта',
+            cancelLabel: 'Ново броене',
+            confirmAction: navigateToCountRoute.type,
+            payload: { mode: 'preferences' },
+            cancelAction: startPreferenceSession.type,
+            destructiveAction: 'cancel',
+          },
+        }),
+      );
+      return;
+    }
+
     this.store.dispatch(startPreferenceSession());
-    void this.router.navigateByUrl('/preference-count');
   }
 
   protected resumeCurrent(): void {

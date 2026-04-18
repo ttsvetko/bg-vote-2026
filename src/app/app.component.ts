@@ -182,15 +182,21 @@ export class AppComponent {
         this.dialogRef = null;
         this.store.dispatch(closeConfirmDialog());
 
-        if (result === 'confirm') {
-          const payload =
-            config.payload && typeof config.payload === 'object' && !Array.isArray(config.payload)
-              ? config.payload
-              : {};
+        const normalizePayload = (value: unknown): Record<string, unknown> =>
+          value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
 
+        if (result === 'confirm') {
           this.store.dispatch({
             type: config.confirmAction,
-            ...(payload as Record<string, unknown>),
+            ...normalizePayload(config.payload),
+          });
+          return;
+        }
+
+        if (result === 'cancel' && config.cancelAction) {
+          this.store.dispatch({
+            type: config.cancelAction,
+            ...normalizePayload(config.cancelPayload),
           });
         }
       });

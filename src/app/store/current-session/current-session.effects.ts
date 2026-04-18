@@ -92,6 +92,17 @@ export class CurrentSessionEffects {
     ),
   );
 
+  startBallotNavigate$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(startBallotSession),
+        tap(() => {
+          void this.router.navigateByUrl('/ballot-count');
+        }),
+      ),
+    { dispatch: false },
+  );
+
   startPreference$ = createEffect(() =>
     this.actions$.pipe(
       ofType(startPreferenceSession),
@@ -109,6 +120,17 @@ export class CurrentSessionEffects {
         }),
       ),
     ),
+  );
+
+  startPreferenceNavigate$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(startPreferenceSession),
+        tap(() => {
+          void this.router.navigateByUrl('/preference-count');
+        }),
+      ),
+    { dispatch: false },
   );
 
   autosave$ = createEffect(

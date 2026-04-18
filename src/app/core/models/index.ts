@@ -58,6 +58,9 @@ export interface ConfirmDialogConfig {
   cancelLabel: string;
   confirmAction: string;
   payload?: unknown;
+  cancelAction?: string;
+  cancelPayload?: unknown;
+  destructiveAction?: 'confirm' | 'cancel';
 }
 
 export interface UiState {

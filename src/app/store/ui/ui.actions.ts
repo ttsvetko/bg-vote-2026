@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { ConfirmDialogConfig, UiDensityMode } from '../../core/models';
+import { ConfirmDialogConfig, CountMode, UiDensityMode } from '../../core/models';
 
 export const toggleShowAllParties = createAction('[UI] Toggle Show All Parties');
 export const toggleDensityMode = createAction('[UI] Toggle Density Mode');
@@ -12,3 +12,4 @@ export const openConfirmDialog = createAction(
 );
 
 export const closeConfirmDialog = createAction('[UI] Close Confirm Dialog');
+export const navigateToCountRoute = createAction('[UI] Navigate To Count Route', props<{ mode: CountMode }>());
