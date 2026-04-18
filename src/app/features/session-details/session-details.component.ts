@@ -46,7 +46,7 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
         <div class="list">
           @for (item of sortedItems(); track item.key) {
             <article class="list__item">
-              <div>
+              <div class="list__identity">
                 <span>{{ item.ballotNumber }}</span>
                 <strong>{{ item.label }}</strong>
               </div>
@@ -150,21 +150,26 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
     }
 
     .list__item {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.75rem;
       padding: 1rem;
       border-radius: 18px;
       background: #fff;
       border: 1px solid rgba(16, 72, 89, 0.08);
     }
 
-    .list__item div {
+    .list__identity {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       min-width: 0;
+    }
+
+    .list__identity strong {
+      min-width: 0;
+      white-space: normal;
     }
 
     .list__item strong,
@@ -181,6 +186,7 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       place-items: center;
       background: #104859;
       color: #fff;
+      flex: none;
     }
 
     output {
@@ -190,7 +196,9 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
     .list__result {
       display: inline-flex;
       align-items: baseline;
+      justify-self: end;
       gap: 0.6rem;
+      white-space: nowrap;
     }
 
     .list__result small {
@@ -246,9 +254,7 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       }
 
       .list__item {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+        grid-template-columns: minmax(0, 1fr) auto;
       }
 
       .button {

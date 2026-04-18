@@ -33,7 +33,7 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       <section class="screen" [class.screen--ultra]="isUltraCompact()">
         <div class="screen__sticky">
           <app-count-toolbar
-            [title]="currentSession.title"
+            [title]="toolbarTitle()"
             [startedAt]="currentSession.startedAt"
             [canUndo]="canUndo()"
             [canRedo]="canRedo()"
@@ -284,6 +284,9 @@ export class PreferenceCountComponent {
   protected readonly canRedo = this.store.selectSignal(selectCanRedo);
   protected readonly session = computed(() =>
     this.currentSession()?.mode === 'preferences' ? this.currentSession() : null,
+  );
+  protected readonly toolbarTitle = computed(() =>
+    (this.session()?.title ?? '').replace(/\s*\(всички партии\)/i, ''),
   );
   protected readonly availableParties = computed(() => {
     const map = new Map<number, string>();

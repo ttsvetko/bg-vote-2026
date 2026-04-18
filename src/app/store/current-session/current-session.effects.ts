@@ -112,7 +112,7 @@ export class CurrentSessionEffects {
         initializeSession({
           session: buildSession(
             'preferences',
-            `Преференции (всички партии) - ${new Date().toLocaleTimeString('bg-BG', { hour: '2-digit', minute: '2-digit' })}`,
+            `Преференции - ${new Date().toLocaleTimeString('bg-BG', { hour: '2-digit', minute: '2-digit' })}`,
             buildAllPreferenceItems(lists),
             election!.id,
             election!.dataVersion,

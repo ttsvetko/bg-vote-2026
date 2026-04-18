@@ -72,7 +72,7 @@ import { CounterItem } from '../../../../core/models';
       place-items: center;
       background: #104859;
       color: #fff;
-      flex: 0 0 auto;
+      flex: none;
       font-size: 0.8rem;
     }
 
