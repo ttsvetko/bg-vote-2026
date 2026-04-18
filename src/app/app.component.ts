@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, HostListener, computed, effect, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { SwUpdate } from '@angular/service-worker';
 import { Store } from '@ngrx/store';
 
 import { loadReferenceData } from './store/reference-data/reference-data.actions';
@@ -141,6 +142,7 @@ interface DeferredInstallPromptEvent extends Event {
 export class AppComponent {
   private readonly store = inject(Store);
   private readonly dialog = inject(Dialog);
+  private readonly swUpdate = inject(SwUpdate);
   private readonly storage = inject(StorageService);
   private readonly destroyRef = inject(DestroyRef);
   private dialogRef: { close: () => void } | null = null;
@@ -157,6 +159,7 @@ export class AppComponent {
     this.store.dispatch(loadSessionsFromStorage());
     this.store.dispatch(restoreDraftSession({ session: this.storage.loadDraft() }));
     this.store.dispatch(setDensityMode({ mode: this.storage.loadDensityMode() }));
+    this.setupServiceWorkerAutoUpdate();
 
     effect(() => {
       const config = this.confirmDialog();
@@ -202,6 +205,41 @@ export class AppComponent {
       });
 
       this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    });
+  }
+
+  private setupServiceWorkerAutoUpdate(): void {
+    if (!this.swUpdate.isEnabled) {
+      return;
+    }
+
+    const versionSub = this.swUpdate.versionUpdates.subscribe((event) => {
+      if (event.type !== 'VERSION_READY') {
+        return;
+      }
+
+      void this.swUpdate
+        .activateUpdate()
+        .then(() => {
+          window.location.reload();
+        })
+        .catch(() => {
+          window.location.reload();
+        });
+    });
+
+    const checkForUpdate = () => {
+      void this.swUpdate.checkForUpdate().catch(() => {
+        return;
+      });
+    };
+
+    checkForUpdate();
+    const intervalId = window.setInterval(checkForUpdate, 60_000);
+
+    this.destroyRef.onDestroy(() => {
+      versionSub.unsubscribe();
+      window.clearInterval(intervalId);
     });
   }
 
@@ -255,6 +293,9 @@ export class AppComponent {
   }
 
   private detectStandaloneMode(): boolean {
-    return window.matchMedia('(display-mode: standalone)').matches || (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as Navigator & { standalone?: boolean }).standalone === true
+    );
   }
 }
