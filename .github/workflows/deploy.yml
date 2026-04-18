@@ -60,10 +60,10 @@ jobs:
         run: cp dist/bg-parallel-count/browser/index.html dist/bg-parallel-count/browser/404.html
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist/bg-parallel-count/browser
 
       - id: deployment
         name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
