@@ -87,8 +87,9 @@ export const currentSessionReducer = createReducer(
       return state;
     }
 
-    const normalized = typeof totalBallots === 'number' && Number.isFinite(totalBallots) ? Math.max(0, Math.trunc(totalBallots)) : undefined;
-    const nextValue = totalBallots === null ? undefined : normalized;
+    const normalized =
+      typeof totalBallots === 'number' && Number.isFinite(totalBallots) ? Math.max(0, Math.trunc(totalBallots)) : undefined;
+    const nextValue = totalBallots === null || (typeof normalized === 'number' && normalized <= 0) ? undefined : normalized;
 
     if (state.session.totalBallots === nextValue) {
       return state;

@@ -72,5 +72,7 @@ export interface UiState {
   showAllParties: boolean;
   densityMode: UiDensityMode;
   defaultTotalBallots: number | null;
+  totalBallotsModalOpen: boolean;
+  totalBallotsModalStartBallotAfterSave: boolean;
   confirmDialog: ConfirmDialogConfig | null;
 }

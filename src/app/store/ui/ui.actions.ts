@@ -10,6 +10,13 @@ export const setDefaultTotalBallots = createAction(
   props<{ totalBallots: number | null }>(),
 );
 
+export const openTotalBallotsModal = createAction(
+  '[UI] Open Total Ballots Modal',
+  props<{ startBallotAfterSave: boolean }>(),
+);
+
+export const closeTotalBallotsModal = createAction('[UI] Close Total Ballots Modal');
+
 export const openConfirmDialog = createAction(
   '[UI] Open Confirm Dialog',
   props<{ config: ConfirmDialogConfig }>(),

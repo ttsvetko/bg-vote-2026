@@ -3,6 +3,7 @@ import { createAction, props } from '@ngrx/store';
 import { CountSession } from '../../core/models';
 
 export const startBallotSession = createAction('[Session] Start Ballot Count');
+export const startBallotSessionGuarded = createAction('[Session] Start Ballot Count (Guarded)');
 
 export const startPreferenceSession = createAction('[Session] Start Preference Count');
 

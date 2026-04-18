@@ -20,6 +20,7 @@ import {
   saveAndExitSession,
   setTotalBallots,
   startBallotSession,
+  startBallotSessionGuarded,
   startPreferenceSession,
   undo,
 } from './current-session.actions';
@@ -27,6 +28,7 @@ import { selectElection, selectParties, selectPreferenceLists } from '../referen
 import { addSession, updateSession } from '../session-history/session-history.actions';
 import { selectSessions } from '../session-history/session-history.selectors';
 import { selectDefaultTotalBallots } from '../ui/ui.selectors';
+import { openTotalBallotsModal } from '../ui/ui.actions';
 
 const buildBallotItems = (parties: PartyDefinition[]): CounterItem[] =>
   parties.map((party) => ({
@@ -65,7 +67,7 @@ const buildSession = (
   startedAt: new Date().toISOString(),
   status: 'draft',
   items,
-  ...(mode === 'ballots' && typeof totalBallots === 'number' ? { totalBallots } : {}),
+  ...(mode === 'ballots' && typeof totalBallots === 'number' && totalBallots > 0 ? { totalBallots } : {}),
   electionId,
   dataVersion,
 });
@@ -76,6 +78,20 @@ export class CurrentSessionEffects {
   private readonly store = inject(Store);
   private readonly storage = inject(StorageService);
   private readonly router = inject(Router);
+
+  startBallotGuarded$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(startBallotSessionGuarded),
+      withLatestFrom(this.store.select(selectDefaultTotalBallots)),
+      map(([, defaultTotalBallots]) => {
+        if (defaultTotalBallots === null || defaultTotalBallots <= 0) {
+          return openTotalBallotsModal({ startBallotAfterSave: true });
+        }
+
+        return startBallotSession();
+      }),
+    ),
+  );
 
   startBallot$ = createEffect(() =>
     this.actions$.pipe(

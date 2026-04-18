@@ -1,16 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { PdfService } from '../../core/services/pdf.service';
 import { selectCurrentSessionEntity } from '../../store/current-session/current-session.selectors';
-import { setTotalBallots, startBallotSession, startPreferenceSession } from '../../store/current-session/current-session.actions';
+import { setTotalBallots, startBallotSessionGuarded, startPreferenceSession } from '../../store/current-session/current-session.actions';
 import { selectElection } from '../../store/reference-data/reference-data.selectors';
 import { deleteSession } from '../../store/session-history/session-history.actions';
 import { selectSessionsSorted } from '../../store/session-history/session-history.selectors';
-import { navigateToCountRoute, openConfirmDialog, setDefaultTotalBallots } from '../../store/ui/ui.actions';
-import { selectDefaultTotalBallots } from '../../store/ui/ui.selectors';
+import {
+  closeTotalBallotsModal,
+  navigateToCountRoute,
+  openConfirmDialog,
+  openTotalBallotsModal,
+  setDefaultTotalBallots,
+} from '../../store/ui/ui.actions';
+import {
+  selectDefaultTotalBallots,
+  selectTotalBallotsModalOpen,
+  selectTotalBallotsModalStartBallotAfterSave,
+} from '../../store/ui/ui.selectors';
 import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
 import { SessionCardComponent } from '../../shared/components/session-card/session-card.component';
 
@@ -20,7 +30,7 @@ import { SessionCardComponent } from '../../shared/components/session-card/sessi
   imports: [CommonModule, FormatTimestampPipe, SessionCardComponent],
   template: `
     <section class="dashboard">
-      @if (showTotalBallotsModal()) {
+      @if (totalBallotsModalOpen()) {
         <div class="modal-overlay" role="presentation">
           <div class="modal" role="dialog" aria-modal="true" aria-label="Общо бюлетини">
             <p class="modal__eyebrow">Бюлетини</p>
@@ -69,7 +79,13 @@ import { SessionCardComponent } from '../../shared/components/session-card/sessi
         <div class="hero__actions">
           <button type="button" class="button button--primary" (click)="startBallot()">+ Ново броене на бюлетини</button>
           <button type="button" class="button button--secondary" (click)="goToPreferences()">+ Ново броене на преференции</button>
-          <button type="button" class="button button--ghost" (click)="openTotalBallotsModal()">
+          <button
+            type="button"
+            class="button total-ballots"
+            [class.total-ballots--set]="hasTotalBallots()"
+            [class.total-ballots--missing]="!hasTotalBallots()"
+            (click)="openTotalBallotsModal()"
+          >
             Общо бюлетини: {{ formatTotalBallots(displayedTotalBallots()) }}
           </button>
         </div>
@@ -290,6 +306,24 @@ import { SessionCardComponent } from '../../shared/components/session-card/sessi
       color: #fff;
     }
 
+    .total-ballots {
+      border: 1px solid rgba(16, 72, 89, 0.12);
+    }
+
+    .total-ballots--missing {
+      background: #fff2f2;
+      border-color: rgba(159, 29, 53, 0.28);
+      color: #7a1023;
+      font-weight: 650;
+    }
+
+    .total-ballots--set {
+      background: #e7f7e7;
+      border-color: rgba(21, 76, 26, 0.22);
+      color: #154c1a;
+      font-weight: 650;
+    }
+
     @media (min-width: 768px) {
       .panel {
         padding: 1.5rem;
@@ -325,6 +359,10 @@ export class DashboardComponent {
   protected readonly sessions = this.store.selectSignal(selectSessionsSorted);
   protected readonly currentSession = this.store.selectSignal(selectCurrentSessionEntity);
   protected readonly defaultTotalBallots = this.store.selectSignal(selectDefaultTotalBallots);
+  protected readonly totalBallotsModalOpen = this.store.selectSignal(selectTotalBallotsModalOpen);
+  protected readonly totalBallotsModalStartBallotAfterSave = this.store.selectSignal(
+    selectTotalBallotsModalStartBallotAfterSave,
+  );
   protected readonly displayedTotalBallots = computed(() => {
     const session = this.currentSession();
     if (session && session.mode === 'ballots') {
@@ -332,9 +370,23 @@ export class DashboardComponent {
     }
     return this.defaultTotalBallots();
   });
+  protected readonly hasTotalBallots = computed(() => {
+    const value = this.displayedTotalBallots();
+    return value !== null && value !== undefined && value > 0;
+  });
 
-  protected readonly showTotalBallotsModal = signal(false);
   protected readonly totalBallotsDraft = signal<string>('');
+
+  constructor() {
+    effect(() => {
+      if (!this.totalBallotsModalOpen()) {
+        return;
+      }
+
+      const value = this.displayedTotalBallots();
+      this.totalBallotsDraft.set(value === null || value === undefined ? '' : String(value));
+    });
+  }
 
   protected startBallot(): void {
     const draft = this.currentSession();
@@ -349,7 +401,7 @@ export class DashboardComponent {
             cancelLabel: 'Ново броене',
             confirmAction: navigateToCountRoute.type,
             payload: { mode: 'ballots' },
-            cancelAction: startBallotSession.type,
+            cancelAction: startBallotSessionGuarded.type,
             destructiveAction: 'cancel',
           },
         }),
@@ -357,7 +409,7 @@ export class DashboardComponent {
       return;
     }
 
-    this.store.dispatch(startBallotSession());
+    this.store.dispatch(startBallotSessionGuarded());
   }
 
   protected goToPreferences(): void {
@@ -422,15 +474,11 @@ export class DashboardComponent {
   }
 
   protected openTotalBallotsModal(): void {
-    const session = this.currentSession();
-    const sessionValue = session && session.mode === 'ballots' ? session.totalBallots : undefined;
-    const initial = sessionValue !== undefined ? sessionValue : this.defaultTotalBallots();
-    this.totalBallotsDraft.set(initial !== null && initial !== undefined ? String(initial) : '');
-    this.showTotalBallotsModal.set(true);
+    this.store.dispatch(openTotalBallotsModal({ startBallotAfterSave: false }));
   }
 
   protected closeTotalBallotsModal(): void {
-    this.showTotalBallotsModal.set(false);
+    this.store.dispatch(closeTotalBallotsModal());
   }
 
   protected onTotalBallotsInput(event: Event): void {
@@ -444,7 +492,7 @@ export class DashboardComponent {
       return false;
     }
     const value = Number(raw);
-    return Number.isFinite(value) && value >= 0;
+    return Number.isFinite(value) && value > 0;
   }
 
   protected saveTotalBallots(): void {
@@ -455,14 +503,18 @@ export class DashboardComponent {
     }
 
     const normalized = Math.max(0, Math.trunc(value));
-    this.store.dispatch(setDefaultTotalBallots({ totalBallots: normalized }));
+    const shouldStartBallot = this.totalBallotsModalStartBallotAfterSave();
+    this.store.dispatch(setDefaultTotalBallots({ totalBallots: normalized > 0 ? normalized : null }));
 
     const session = this.currentSession();
     if (session && session.mode === 'ballots') {
-      this.store.dispatch(setTotalBallots({ totalBallots: normalized }));
+      this.store.dispatch(setTotalBallots({ totalBallots: normalized > 0 ? normalized : null }));
     }
 
-    this.closeTotalBallotsModal();
+    this.store.dispatch(closeTotalBallotsModal());
+    if (shouldStartBallot) {
+      this.store.dispatch(startBallotSessionGuarded());
+    }
   }
 
   protected clearTotalBallots(): void {
@@ -473,11 +525,11 @@ export class DashboardComponent {
       this.store.dispatch(setTotalBallots({ totalBallots: null }));
     }
 
-    this.closeTotalBallotsModal();
+    this.store.dispatch(closeTotalBallotsModal());
   }
 
   protected formatTotalBallots(value: number | null | undefined): string {
-    if (value === null || value === undefined) {
+    if (value === null || value === undefined || value <= 0) {
       return 'не е зададено';
     }
 

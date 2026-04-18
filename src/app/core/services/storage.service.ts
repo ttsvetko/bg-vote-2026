@@ -70,7 +70,7 @@ export class StorageService {
   }
 
   saveDefaultTotalBallots(value: number | null): void {
-    if (value === null) {
+    if (value === null || value <= 0) {
       localStorage.removeItem(STORAGE_KEYS.DEFAULT_TOTAL_BALLOTS);
       return;
     }
@@ -85,7 +85,7 @@ export class StorageService {
     }
 
     const value = Number(raw);
-    if (!Number.isFinite(value) || value < 0) {
+    if (!Number.isFinite(value) || value <= 0) {
       return null;
     }
 
