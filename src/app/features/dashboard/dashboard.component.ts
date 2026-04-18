@@ -61,9 +61,12 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
           <div class="history">
             @for (session of sessions(); track session.id) {
               <article class="history__item">
-                <div>
+                <div class="history__meta">
                   <strong>{{ session.title }}</strong>
-                  <p>{{ session.startedAt | formatTimestamp }} → {{ session.finishedAt | formatTimestamp }}</p>
+                  <div class="history__times">
+                    <p><span>Старт:</span> {{ session.startedAt | formatTimestamp }}</p>
+                    <p><span>Край:</span> {{ session.finishedAt | formatTimestamp }}</p>
+                  </div>
                 </div>
 
                 <div class="history__actions">
@@ -102,7 +105,6 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
 
     .panel__header {
       display: flex;
-      flex-direction: column;
       gap: 1rem;
       justify-content: space-between;
       align-items: start;
@@ -148,10 +150,25 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       border: 1px solid rgba(16, 72, 89, 0.08);
     }
 
-    .history__item p,
+    .history__times {
+      display: grid;
+      gap: 0.25rem;
+      margin-top: 0.4rem;
+    }
+
+    .history__times p,
     .empty {
-      margin: 0.35rem 0 0;
+      margin: 0;
       color: #526872;
+      font-size: 0.9rem;
+      line-height: 1.25;
+    }
+
+    .history__times span {
+      color: #17475a;
+      font-weight: 600;
+      font-size: 0.84rem;
+      letter-spacing: 0.01em;
     }
 
     .badge {
@@ -163,6 +180,7 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       background: #104859;
       color: white;
       font-weight: 700;
+      flex: none;
     }
 
     .button {

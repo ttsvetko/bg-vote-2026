@@ -77,7 +77,6 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
 
     .panel__header {
       display: flex;
-      flex-direction: column;
       gap: 1rem;
       justify-content: space-between;
     }
