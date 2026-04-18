@@ -1,46 +1,58 @@
 [
-  { "ballotNumber": 1, "shortName": "ИТН", "fullName": "ПП ИМА ТАКЪВ НАРОД", "likelyTop5": false },
-  { "ballotNumber": 2, "shortName": "Пряка демокрация", "fullName": "ПРЯКА ДЕМОКРАЦИЯ", "likelyTop5": false },
-  { "ballotNumber": 3, "shortName": "Синя България", "fullName": "СИНЯ БЪЛГАРИЯ", "likelyTop5": false },
-  { "ballotNumber": 4, "shortName": "МЕЧ", "fullName": "ПП МЕЧ", "likelyTop5": false },
-  { "ballotNumber": 5, "shortName": "БСП-ОЛ", "fullName": "БСП – ОБЕДИНЕНА ЛЕВИЦА", "likelyTop5": true },
+  { "ballotNumber": 1, "shortName": "ИТН", "fullName": "ПП ИМА ТАКЪВ НАРОД", "likelyTop10": true },
+  { "ballotNumber": 2, "shortName": "Пряка демокрация", "fullName": "ПРЯКА ДЕМОКРАЦИЯ", "likelyTop10": false },
+  { "ballotNumber": 3, "shortName": "Синя България", "fullName": "СИНЯ БЪЛГАРИЯ", "likelyTop10": false },
+  { "ballotNumber": 4, "shortName": "МЕЧ", "fullName": "ПП МЕЧ", "likelyTop10": true },
+  { "ballotNumber": 5, "shortName": "БСП-ОЛ", "fullName": "БСП – ОБЕДИНЕНА ЛЕВИЦА", "likelyTop10": true },
   {
     "ballotNumber": 6,
     "shortName": "НП ИСИ",
     "fullName": "ПП НАРОДНА ПАРТИЯ ИСТИНАТА И САМО ИСТИНАТА",
-    "likelyTop5": false
+    "likelyTop10": false
   },
   {
     "ballotNumber": 7,
     "shortName": "ПП-ДБ",
     "fullName": "КОАЛИЦИЯ ПРОДЪЛЖАВАМЕ ПРОМЯНАТА – ДЕМОКРАТИЧНА БЪЛГАРИЯ",
-    "likelyTop5": true
+    "likelyTop10": true
   },
-  { "ballotNumber": 8, "shortName": "Възраждане", "fullName": "ВЪЗРАЖДАНЕ", "likelyTop5": true },
-  { "ballotNumber": 9, "shortName": "Моя България", "fullName": "МОЯ БЪЛГАРИЯ", "likelyTop5": false },
+  { "ballotNumber": 8, "shortName": "Възраждане", "fullName": "ВЪЗРАЖДАНЕ", "likelyTop10": true },
+  { "ballotNumber": 9, "shortName": "Моя България", "fullName": "МОЯ БЪЛГАРИЯ", "likelyTop10": false },
   {
     "ballotNumber": 10,
     "shortName": "ДНК",
     "fullName": "Движение на непартийните кандидати",
-    "likelyTop5": false
+    "likelyTop10": false
   },
   {
     "ballotNumber": 11,
     "shortName": "АПС",
     "fullName": "АЛИАНС ЗА ПРАВА И СВОБОДИ – АПС",
-    "likelyTop5": false
+    "likelyTop10": false
   },
-  { "ballotNumber": 12, "shortName": "Антикорупционен блок", "fullName": "АНТИКОРУПЦИОНЕН БЛОК", "likelyTop5": false },
-  { "ballotNumber": 13, "shortName": "НД Непокорна България", "fullName": "НД НЕПОКОРНА БЪЛГАРИЯ", "likelyTop5": false },
-  { "ballotNumber": 14, "shortName": "Величие", "fullName": "ПП ВЕЛИЧИЕ", "likelyTop5": false },
-  { "ballotNumber": 15, "shortName": "ГЕРБ-СДС", "fullName": "ГЕРБ-СДС", "likelyTop5": true },
-  { "ballotNumber": 16, "shortName": "Трети март", "fullName": "КП ТРЕТИ МАРТ", "likelyTop5": false },
-  { "ballotNumber": 17, "shortName": "ДПС", "fullName": "Движение за права и свободи - ДПС", "likelyTop5": true },
-  { "ballotNumber": 18, "shortName": "Нация", "fullName": "ПП НАЦИЯ", "likelyTop5": false },
-  { "ballotNumber": 19, "shortName": "България може", "fullName": "БЪЛГАРИЯ МОЖЕ", "likelyTop5": false },
-  { "ballotNumber": 20, "shortName": "Сияние", "fullName": "СИЯНИЕ", "likelyTop5": false },
-  { "ballotNumber": 21, "shortName": "Прогресивна България", "fullName": "ПРОГРЕСИВНА БЪЛГАРИЯ", "likelyTop5": true },
-  { "ballotNumber": 22, "shortName": "Съпротива", "fullName": "Съпротива", "likelyTop5": false },
-  { "ballotNumber": 23, "shortName": "Зелените", "fullName": "Партия на ЗЕЛЕНИТЕ", "likelyTop5": false },
-  { "ballotNumber": 24, "shortName": "Глас народен", "fullName": "ПП ГЛАС НАРОДЕН", "likelyTop5": false }
+  { "ballotNumber": 12, "shortName": "Антикорупционен блок", "fullName": "АНТИКОРУПЦИОНЕН БЛОК", "likelyTop10": false },
+  { "ballotNumber": 13, "shortName": "НД Непокорна България", "fullName": "НД НЕПОКОРНА БЪЛГАРИЯ", "likelyTop10": false },
+  { "ballotNumber": 14, "shortName": "Величие", "fullName": "ПП ВЕЛИЧИЕ", "likelyTop10": false },
+  { "ballotNumber": 15, "shortName": "ГЕРБ-СДС", "fullName": "ГЕРБ-СДС", "likelyTop10": true },
+  { "ballotNumber": 16, "shortName": "Трети март", "fullName": "КП ТРЕТИ МАРТ", "likelyTop10": false },
+  { "ballotNumber": 17, "shortName": "ДПС", "fullName": "Движение за права и свободи - ДПС", "likelyTop10": true },
+  { "ballotNumber": 18, "shortName": "Нация", "fullName": "ПП НАЦИЯ", "likelyTop10": false },
+  { "ballotNumber": 19, "shortName": "България може", "fullName": "БЪЛГАРИЯ МОЖЕ", "likelyTop10": false },
+  { "ballotNumber": 20, "shortName": "Сияние", "fullName": "СИЯНИЕ", "likelyTop10": false },
+  { "ballotNumber": 21, "shortName": "Прогресивна България", "fullName": "ПРОГРЕСИВНА БЪЛГАРИЯ", "likelyTop10": true },
+  { "ballotNumber": 22, "shortName": "Съпротива", "fullName": "Съпротива", "likelyTop10": false },
+  { "ballotNumber": 23, "shortName": "Зелените", "fullName": "Партия на ЗЕЛЕНИТЕ", "likelyTop10": false },
+  { "ballotNumber": 24, "shortName": "Глас народен", "fullName": "ПП ГЛАС НАРОДЕН", "likelyTop10": false },
+  {
+    "ballotNumber": 25,
+    "shortName": "Не подкрепям никого",
+    "fullName": "НЕ ПОДКРЕПЯМ НИКОГО",
+    "likelyTop10": true
+  },
+  {
+    "ballotNumber": 26,
+    "shortName": "Невалидна бюлетина",
+    "fullName": "НЕВАЛИДНА БЮЛЕТИНА",
+    "likelyTop10": true
+  }
 ]

@@ -14,7 +14,7 @@ export interface PartyDefinition {
   ballotNumber: number;
   shortName: string;
   fullName: string;
-  likelyTop5: boolean;
+  likelyTop10: boolean;
 }
 
 export interface CandidateDefinition {

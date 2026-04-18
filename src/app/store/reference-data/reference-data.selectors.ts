@@ -7,5 +7,13 @@ export const selectReferenceData = createFeatureSelector<ReferenceDataState>('re
 export const selectElection = createSelector(selectReferenceData, (state) => state.election);
 export const selectParties = createSelector(selectReferenceData, (state) => state.parties);
 export const selectPreferenceLists = createSelector(selectReferenceData, (state) => state.preferenceLists);
+export const selectPartiesWithPreferenceLists = createSelector(
+  selectParties,
+  selectPreferenceLists,
+  (parties, preferenceLists) => {
+    const numbersWithLists = new Set(preferenceLists.map((entry) => entry.partyBallotNumber));
+    return parties.filter((party) => numbersWithLists.has(party.ballotNumber));
+  },
+);
 export const selectReferenceDataLoaded = createSelector(selectReferenceData, (state) => state.loaded);
 export const selectReferenceDataError = createSelector(selectReferenceData, (state) => state.error);

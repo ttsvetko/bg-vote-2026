@@ -11,16 +11,16 @@ export const selectCurrentItems = createSelector(selectCurrentSession, (state) =
 export const selectCurrentSessionDirty = createSelector(selectCurrentSession, (state) => state.isDirty);
 export const selectCurrentMode = createSelector(selectCurrentSessionEntity, (session) => session?.mode ?? null);
 
-export const selectTop6Items = createSelector(selectCurrentItems, selectParties, (items, parties) => {
-  const top6Numbers = new Set(parties.filter((party) => party.likelyTop5).map((party) => party.ballotNumber));
-  return items.filter((item) => top6Numbers.has(item.ballotNumber));
+export const selectTop10Items = createSelector(selectCurrentItems, selectParties, (items, parties) => {
+  const top10Numbers = new Set(parties.filter((party) => party.likelyTop10).map((party) => party.ballotNumber));
+  return items.filter((item) => top10Numbers.has(item.ballotNumber));
 });
 
 export const selectDisplayedItems = createSelector(
   selectCurrentItems,
-  selectTop6Items,
+  selectTop10Items,
   selectShowAllParties,
-  (all, top6, showAll) => (showAll ? all : top6),
+  (all, top10, showAll) => (showAll ? all : top10),
 );
 
 export const selectTotalCount = createSelector(selectCurrentItems, (items) =>

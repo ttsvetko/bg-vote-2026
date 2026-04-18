@@ -17,6 +17,7 @@ import {
   redo,
   restoreDraftSession,
   saveDraft,
+  saveAndExitSession,
   startBallotSession,
   startPreferenceSession,
   undo,
@@ -129,6 +130,18 @@ export class CurrentSessionEffects {
           if (session) {
             this.storage.saveDraft(session);
           }
+        }),
+      ),
+    { dispatch: false },
+  );
+
+  saveAndExit$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(saveAndExitSession),
+        tap(() => {
+          this.store.dispatch(saveDraft());
+          void this.router.navigateByUrl('/');
         }),
       ),
     { dispatch: false },

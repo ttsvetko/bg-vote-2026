@@ -12,7 +12,7 @@ import {
   decrementCount,
   incrementCount,
   redo,
-  saveDraft,
+  saveAndExitSession,
   startPreferenceSession,
   undo,
 } from '../../store/current-session/current-session.actions';
@@ -23,7 +23,7 @@ import {
   selectCurrentItems,
   selectTotalCount,
 } from '../../store/current-session/current-session.selectors';
-import { selectParties } from '../../store/reference-data/reference-data.selectors';
+import { selectPartiesWithPreferenceLists } from '../../store/reference-data/reference-data.selectors';
 import { openConfirmDialog, toggleDensityMode } from '../../store/ui/ui.actions';
 import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
 
@@ -217,7 +217,7 @@ export class PreferenceCountComponent {
   private readonly router = inject(Router);
   private readonly currentSession = this.store.selectSignal(selectCurrentSessionEntity);
 
-  protected readonly parties = this.store.selectSignal(selectParties);
+  protected readonly parties = this.store.selectSignal(selectPartiesWithPreferenceLists);
   protected readonly items = this.store.selectSignal(selectCurrentItems);
   protected readonly total = this.store.selectSignal(selectTotalCount);
   protected readonly isUltraCompact = this.store.selectSignal(selectIsUltraCompact);
@@ -252,12 +252,31 @@ export class PreferenceCountComponent {
   }
 
   protected save(): void {
-    this.store.dispatch(saveDraft());
-    void this.router.navigateByUrl('/');
+    this.store.dispatch(
+      openConfirmDialog({
+        config: {
+          title: 'Запазване на гласуването',
+          message: 'Сигурни ли сте, че искате да запазите текущото преброяване и да се върнете към таблото?',
+          confirmLabel: 'Запази',
+          cancelLabel: 'Назад',
+          confirmAction: saveAndExitSession.type,
+        },
+      }),
+    );
   }
 
   protected complete(): void {
-    this.store.dispatch(completeSession());
+    this.store.dispatch(
+      openConfirmDialog({
+        config: {
+          title: 'Приключване на преброяването',
+          message: 'Сигурни ли сте, че искате да приключите текущото преброяване? След това сесията ще бъде запазена в историята.',
+          confirmLabel: 'Приключи',
+          cancelLabel: 'Назад',
+          confirmAction: completeSession.type,
+        },
+      }),
+    );
   }
 
   protected cancel(): void {

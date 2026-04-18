@@ -24,6 +24,7 @@ export const decrementCount = createAction('[Session] Decrement', props<{ key: s
 export const undo = createAction('[Session] Undo');
 export const redo = createAction('[Session] Redo');
 export const saveDraft = createAction('[Session] Save Draft');
+export const saveAndExitSession = createAction('[Session] Save And Exit');
 export const completeSession = createAction('[Session] Complete');
 export const cancelSession = createAction('[Session] Cancel');
 export const clearCurrentSession = createAction('[Session] Clear');

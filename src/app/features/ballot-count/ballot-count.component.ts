@@ -11,7 +11,7 @@ import {
   decrementCount,
   incrementCount,
   redo,
-  saveDraft,
+  saveAndExitSession,
   undo,
 } from '../../store/current-session/current-session.actions';
 import {
@@ -229,12 +229,31 @@ export class BallotCountComponent {
   }
 
   protected save(): void {
-    this.store.dispatch(saveDraft());
-    void this.router.navigateByUrl('/');
+    this.store.dispatch(
+      openConfirmDialog({
+        config: {
+          title: 'Запазване на гласуването',
+          message: 'Сигурни ли сте, че искате да запазите текущото преброяване и да се върнете към таблото?',
+          confirmLabel: 'Запази',
+          cancelLabel: 'Назад',
+          confirmAction: saveAndExitSession.type,
+        },
+      }),
+    );
   }
 
   protected complete(): void {
-    this.store.dispatch(completeSession());
+    this.store.dispatch(
+      openConfirmDialog({
+        config: {
+          title: 'Приключване на преброяването',
+          message: 'Сигурни ли сте, че искате да приключите текущото преброяване? След това сесията ще бъде запазена в историята.',
+          confirmLabel: 'Приключи',
+          cancelLabel: 'Назад',
+          confirmAction: completeSession.type,
+        },
+      }),
+    );
   }
 
   protected cancel(): void {

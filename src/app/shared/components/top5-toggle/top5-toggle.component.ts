@@ -7,7 +7,7 @@ import { Component, input, output } from '@angular/core';
   imports: [CommonModule],
   template: `
     <button type="button" class="toggle" [class.toggle--ultra]="ultraCompact()" (click)="toggled.emit()">
-      {{ showAll() ? 'Покажи само Top 6' : 'Покажи всички партии' }}
+      {{ showAll() ? 'Покажи само Top 10' : 'Покажи всички партии' }}
     </button>
   `,
   styles: `
