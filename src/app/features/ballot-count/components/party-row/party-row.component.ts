@@ -117,14 +117,26 @@ import { CounterItem } from '../../../../core/models';
     .row--ultra {
       gap: 0.4rem;
       padding: 0.5rem 0.6rem;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .row--ultra .row__meta {
       gap: 0.45rem;
+      align-items: center;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .row--ultra .row__text {
+      min-width: 0;
     }
 
     .row--ultra strong {
       font-size: 0.9rem;
+      line-height: 1.1;
+      white-space: normal;
     }
 
     .row--ultra small {
@@ -139,6 +151,8 @@ import { CounterItem } from '../../../../core/models';
 
     .row--ultra .row__controls {
       gap: 0.35rem;
+      align-self: center;
+      flex: 0 0 auto;
     }
 
     .row--ultra button {
