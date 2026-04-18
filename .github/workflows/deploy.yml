@@ -16,11 +16,16 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      BASE_HREF: /${{ github.event.repository.name }}/
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -32,7 +37,7 @@ jobs:
         run: npm ci
 
       - name: Build Angular app
-        run: npx ng build --configuration production --base-href /vote-2026/
+        run: npx ng build --configuration production --base-href "$BASE_HREF"
 
       - name: Copy index.html to 404.html
         run: cp dist/bg-parallel-count/browser/index.html dist/bg-parallel-count/browser/404.html
