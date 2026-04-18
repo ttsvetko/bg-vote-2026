@@ -42,7 +42,19 @@ jobs:
 
       - name: Append build version query param to assets
         run: |
-          node -e "const fs=require('fs'); const file='dist/bg-parallel-count/browser/index.html'; const version=process.env.BUILD_VERSION || Date.now().toString(); let html=fs.readFileSync(file,'utf8'); html=html.replace(/(src|href)=\"([^\"]+\.(?:js|css))(?:\?[^\"]*)?\"/g, (_m, attr, url) => `${attr}=\"${url}?v=${version}\"`); fs.writeFileSync(file, html);"
+          node -e '
+          const fs = require("fs");
+          const file = "dist/bg-parallel-count/browser/index.html";
+          const version = process.env.BUILD_VERSION || Date.now().toString();
+          let html = fs.readFileSync(file, "utf8");
+
+          html = html.replace(
+            /(src|href)="([^"]+\.(?:js|css))(?:\?[^"]*)?"/g,
+            (_match, attr, url) => `${attr}="${url}?v=${version}"`
+          );
+
+          fs.writeFileSync(file, html);
+          '
 
       - name: Copy index.html to 404.html
         run: cp dist/bg-parallel-count/browser/index.html dist/bg-parallel-count/browser/404.html
