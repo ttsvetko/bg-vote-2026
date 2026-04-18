@@ -16,7 +16,9 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       <section class="panel">
         <div class="panel__header">
           <div>
-            <p class="eyebrow">{{ currentSession.mode === 'ballots' ? 'Бюлетини' : 'Преференции' }}</p>
+            <p class="eyebrow">
+              {{ currentSession.mode === 'ballots' ? 'Бюлетини' : 'Преференции' }}
+            </p>
             <h2>{{ currentSession.title }}</h2>
           </div>
 
@@ -27,11 +29,26 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
         </div>
 
         <dl class="meta">
-          <div><dt>Старт</dt><dd>{{ currentSession.startedAt | formatTimestamp }}</dd></div>
-          <div><dt>Край</dt><dd>{{ currentSession.finishedAt | formatTimestamp }}</dd></div>
-          <div><dt>Статус</dt><dd>{{ currentSession.status }}</dd></div>
-          <div><dt>Сесия ID</dt><dd>{{ currentSession.id }}</dd></div>
-          <div><dt>Общо бюлетини</dt><dd>{{ totalCount() }}</dd></div>
+          <div>
+            <dt>Старт</dt>
+            <dd>{{ currentSession.startedAt | formatTimestamp }}</dd>
+          </div>
+          <div>
+            <dt>Край</dt>
+            <dd>{{ currentSession.finishedAt | formatTimestamp }}</dd>
+          </div>
+          <div>
+            <dt>Статус</dt>
+            <dd>{{ currentSession.status }}</dd>
+          </div>
+          <div>
+            <dt>Сесия ID</dt>
+            <dd>{{ currentSession.id }}</dd>
+          </div>
+          <div>
+            <dt>Общо бюлетини</dt>
+            <dd>{{ totalCount() }}</dd>
+          </div>
         </dl>
 
         <div class="sort">
@@ -47,7 +64,24 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
           @for (item of sortedItems(); track item.key) {
             <article class="list__item">
               <div class="list__identity">
-                <span>{{ item.ballotNumber }}</span>
+                <div class="list__numbers">
+                  @if (item.partyBallotNumber; as partyNo) {
+                    <span
+                      class="list__badge list__badge--party"
+                      [style.background]="partyBadgeStyle(partyNo).background"
+                      [style.color]="partyBadgeStyle(partyNo).color"
+                      >{{ partyNo }}</span
+                    >
+                    <span
+                      class="list__badge"
+                      [style.background]="partyBadgeStyle(partyNo).background"
+                      [style.color]="partyBadgeStyle(partyNo).color"
+                      >{{ item.ballotNumber | number: '3.0' }}</span
+                    >
+                  } @else {
+                    <span class="list__badge">{{ item.ballotNumber }}</span>
+                  }
+                </div>
                 <strong>{{ item.label }}</strong>
               </div>
               <div class="list__result">
@@ -61,7 +95,9 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
     } @else {
       <section class="panel">
         <h2>Сесията не беше намерена</h2>
-        <button type="button" class="button button--primary" (click)="goBack()">Към историята</button>
+        <button type="button" class="button button--primary" (click)="goBack()">
+          Към историята
+        </button>
       </section>
     }
   `,
@@ -177,15 +213,28 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       overflow-wrap: anywhere;
     }
 
-    .list__item span {
-      width: 2.2rem;
-      height: 2.2rem;
-      border-radius: 50%;
+    .list__numbers {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex: none;
+    }
+
+    .list__badge {
+      min-width: 2.65rem;
+      height: 2rem;
+      border-radius: 999px;
       display: grid;
       place-items: center;
       background: #104859;
       color: #fff;
       flex: none;
+      font-size: 0.8rem;
+      padding: 0 0.35rem;
+    }
+
+    .list__badge--party {
+      min-width: 2rem;
     }
 
     output {
@@ -285,14 +334,28 @@ export class SessionDetailsComponent {
     const mode = this.sortMode();
 
     if (mode === 'votesDesc') {
-      return items.sort((a, b) => b.count - a.count || a.ballotNumber - b.ballotNumber);
+      return items.sort(
+        (a, b) =>
+          b.count - a.count ||
+          (a.partyBallotNumber ?? 0) - (b.partyBallotNumber ?? 0) ||
+          a.ballotNumber - b.ballotNumber,
+      );
     }
 
     if (mode === 'votesAsc') {
-      return items.sort((a, b) => a.count - b.count || a.ballotNumber - b.ballotNumber);
+      return items.sort(
+        (a, b) =>
+          a.count - b.count ||
+          (a.partyBallotNumber ?? 0) - (b.partyBallotNumber ?? 0) ||
+          a.ballotNumber - b.ballotNumber,
+      );
     }
 
-    return items.sort((a, b) => a.ballotNumber - b.ballotNumber);
+    // default: по номер в бюлетината — за preferences: партия първо, после преференция
+    return items.sort(
+      (a, b) =>
+        (a.partyBallotNumber ?? 0) - (b.partyBallotNumber ?? 0) || a.ballotNumber - b.ballotNumber,
+    );
   });
 
   protected changeSort(event: Event): void {
@@ -325,4 +388,19 @@ export class SessionDetailsComponent {
   protected goBack(): void {
     void this.router.navigateByUrl('/history');
   }
+
+  protected partyBadgeStyle(partyBallotNumber: number): { background: string; color: string } {
+  const palette = [
+    { background: '#dff3ff', color: '#0d3c5f' },
+    { background: '#e7f7e7', color: '#154c1a' },
+    { background: '#fff0d9', color: '#6d3a00' },
+    { background: '#fde2ec', color: '#6f1938' },
+    { background: '#ece9ff', color: '#36266c' },
+    { background: '#dff7f4', color: '#0d4b42' },
+    { background: '#ffe8e2', color: '#6c2b1a' },
+    { background: '#f0f4d9', color: '#42500d' },
+  ];
+
+  return palette[Math.abs(partyBallotNumber) % palette.length] ?? palette[0];
+}
 }
