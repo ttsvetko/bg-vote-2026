@@ -103,7 +103,6 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       border: 1px solid rgba(16, 72, 89, 0.08);
       border-radius: 20px;
       padding: 0.8rem 0.9rem;
-      overflow-x: hidden;
     }
 
     h2 {
