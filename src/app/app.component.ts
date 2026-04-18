@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, HostListener, effect, inject } from '@angular/core';
+import { Component, DestroyRef, HostListener, computed, effect, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { Store } from '@ngrx/store';
@@ -12,6 +12,11 @@ import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confi
 import { restoreDraftSession } from './store/current-session/current-session.actions';
 import { StorageService } from './core/services/storage.service';
 import { selectCurrentSessionEntity } from './store/current-session/current-session.selectors';
+
+interface DeferredInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+}
 
 @Component({
   selector: 'app-root',
@@ -26,6 +31,9 @@ import { selectCurrentSessionEntity } from './store/current-session/current-sess
         </div>
 
         <nav class="shell__nav">
+          @if (canInstall()) {
+            <button type="button" (click)="installApp()">Инсталирай приложението</button>
+          }
           <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Табло</a>
           <a routerLink="/history" routerLinkActive="active">История</a>
         </nav>
@@ -85,7 +93,8 @@ import { selectCurrentSessionEntity } from './store/current-session/current-sess
       width: 100%;
     }
 
-    .shell__nav a {
+    .shell__nav a,
+    .shell__nav button {
       min-height: 44px;
       display: inline-flex;
       align-items: center;
@@ -96,6 +105,8 @@ import { selectCurrentSessionEntity } from './store/current-session/current-sess
       color: #1a3a46;
       background: rgba(255, 255, 255, 0.7);
       border: 1px solid rgba(26, 58, 70, 0.12);
+      font: inherit;
+      cursor: pointer;
     }
 
     .shell__nav a.active {
@@ -133,9 +144,13 @@ export class AppComponent {
   private readonly storage = inject(StorageService);
   private readonly destroyRef = inject(DestroyRef);
   private dialogRef: { close: () => void } | null = null;
+  private deferredInstallPrompt: DeferredInstallPromptEvent | null = null;
 
   private readonly confirmDialog = this.store.selectSignal(selectConfirmDialog);
   private readonly currentSession = this.store.selectSignal(selectCurrentSessionEntity);
+  private readonly installPromptReady = signal(false);
+  private readonly isStandalone = signal(this.detectStandaloneMode());
+  protected readonly canInstall = computed(() => this.installPromptReady() && !this.isStandalone());
 
   constructor() {
     this.store.dispatch(loadReferenceData());
@@ -201,7 +216,38 @@ export class AppComponent {
     event.returnValue = '';
   }
 
+  @HostListener('window:beforeinstallprompt', ['$event'])
+  protected onBeforeInstallPrompt(event: Event): void {
+    const promptEvent = event as DeferredInstallPromptEvent;
+    promptEvent.preventDefault();
+    this.deferredInstallPrompt = promptEvent;
+    this.installPromptReady.set(true);
+  }
+
+  @HostListener('window:appinstalled')
+  protected onAppInstalled(): void {
+    this.deferredInstallPrompt = null;
+    this.installPromptReady.set(false);
+    this.isStandalone.set(true);
+  }
+
+  protected async installApp(): Promise<void> {
+    if (!this.deferredInstallPrompt) {
+      return;
+    }
+
+    await this.deferredInstallPrompt.prompt();
+    await this.deferredInstallPrompt.userChoice;
+    this.deferredInstallPrompt = null;
+    this.installPromptReady.set(false);
+    this.isStandalone.set(this.detectStandaloneMode());
+  }
+
   private isCountRoute(pathname: string): boolean {
     return pathname.endsWith('/ballot-count') || pathname.endsWith('/preference-count');
+  }
+
+  private detectStandaloneMode(): boolean {
+    return window.matchMedia('(display-mode: standalone)').matches || (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
   }
 }
