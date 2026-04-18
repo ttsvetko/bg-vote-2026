@@ -255,6 +255,16 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       padding: 0.25rem 0.65rem;
     }
 
+    .screen--ultra .party-filter-row {
+      flex-wrap: nowrap;
+    }
+
+    @media (max-width: 420px) {
+      .screen--ultra .clear-filter {
+        width: auto;
+      }
+    }
+
     @media (min-width: 768px) {
       .screen,
       .empty-state {
