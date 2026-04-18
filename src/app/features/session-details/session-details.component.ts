@@ -13,7 +13,7 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
   imports: [CommonModule, RouterLink, FormatTimestampPipe],
   template: `
     @if (session(); as currentSession) {
-      <section class="panel">
+      <section class="panel" [class.panel--mismatch]="isBallotMismatch()">
         <div class="panel__header">
           <div>
             <p class="eyebrow">
@@ -27,6 +27,13 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
             <button type="button" class="button button--primary" (click)="export()">PDF</button>
           </div>
         </div>
+
+        @if (isBallotMismatch()) {
+          <div class="mismatch">
+            <strong>Разминаване между преброени и протокол.</strong>
+            <span>Преброени: {{ totalCount() }}, по протокол: {{ currentSession.totalBallots }}.</span>
+          </div>
+        }
 
         <dl class="meta">
           <div>
@@ -45,10 +52,21 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
             <dt>Сесия ID</dt>
             <dd>{{ currentSession.id }}</dd>
           </div>
-          <div>
-            <dt>Общо бюлетини</dt>
-            <dd>{{ totalCount() }}</dd>
-          </div>
+          @if (currentSession.mode === 'ballots') {
+            <div>
+              <dt>Общо бюлетини (по протокол)</dt>
+              <dd>{{ currentSession.totalBallots ?? '—' }}</dd>
+            </div>
+            <div>
+              <dt>Преброени бюлетини</dt>
+              <dd>{{ totalCount() }}</dd>
+            </div>
+          } @else {
+            <div>
+              <dt>Общо преференции</dt>
+              <dd>{{ totalCount() }}</dd>
+            </div>
+          }
         </dl>
 
         <div class="sort">
@@ -109,6 +127,26 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       border: 1px solid rgba(16, 72, 89, 0.08);
       border-radius: 28px;
       padding: 1.25rem;
+    }
+
+    .panel--mismatch {
+      background: rgba(255, 242, 242, 0.92);
+      border-color: rgba(159, 29, 53, 0.28);
+    }
+
+    .mismatch {
+      display: grid;
+      gap: 0.25rem;
+      border-radius: 18px;
+      padding: 0.9rem 1rem;
+      background: rgba(159, 29, 53, 0.08);
+      border: 1px solid rgba(159, 29, 53, 0.2);
+      color: #8d162b;
+      line-height: 1.35;
+    }
+
+    .mismatch strong {
+      color: #7a1023;
     }
 
     .panel__header {
@@ -327,6 +365,13 @@ export class SessionDetailsComponent {
   protected readonly totalCount = computed(() => {
     const session = this.session();
     return session ? session.items.reduce((sum, item) => sum + item.count, 0) : 0;
+  });
+  protected readonly isBallotMismatch = computed(() => {
+    const session = this.session();
+    if (!session || session.mode !== 'ballots' || session.totalBallots === undefined) {
+      return false;
+    }
+    return this.totalCount() !== session.totalBallots;
   });
   protected readonly sortedItems = computed(() => {
     const session = this.session();

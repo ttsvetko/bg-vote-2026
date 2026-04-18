@@ -10,6 +10,7 @@ import {
   initializeSession,
   redo,
   restoreDraftSession,
+  setTotalBallots,
   saveDraft,
   undo,
 } from './current-session.actions';
@@ -81,6 +82,27 @@ export const currentSessionReducer = createReducer(
   })),
   on(incrementCount, (state, { key }) => applyCountChange(state, key, 1)),
   on(decrementCount, (state, { key }) => applyCountChange(state, key, -1)),
+  on(setTotalBallots, (state, { totalBallots }) => {
+    if (!state.session) {
+      return state;
+    }
+
+    const normalized = typeof totalBallots === 'number' && Number.isFinite(totalBallots) ? Math.max(0, Math.trunc(totalBallots)) : undefined;
+    const nextValue = totalBallots === null ? undefined : normalized;
+
+    if (state.session.totalBallots === nextValue) {
+      return state;
+    }
+
+    return {
+      ...state,
+      session: {
+        ...state.session,
+        totalBallots: nextValue,
+      },
+      isDirty: true,
+    };
+  }),
   on(undo, (state) => {
     if (!state.session || state.past.length === 0) {
       return state;

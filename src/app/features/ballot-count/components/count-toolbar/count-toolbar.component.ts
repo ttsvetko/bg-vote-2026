@@ -15,13 +15,21 @@ import { FormatTimestampPipe } from '../../../../shared/pipes/format-timestamp.p
         <p>Старт: {{ startedAt() | formatTimestamp }}</p>
       </div>
 
-      <app-undo-bar
-        [canUndo]="canUndo()"
-        [canRedo]="canRedo()"
-        [ultraCompact]="ultraCompact()"
-        (undoPressed)="undoPressed.emit()"
-        (redoPressed)="redoPressed.emit()"
-      />
+      <div class="toolbar__actions">
+        <app-undo-bar
+          [canUndo]="canUndo()"
+          [canRedo]="canRedo()"
+          [ultraCompact]="ultraCompact()"
+          (undoPressed)="undoPressed.emit()"
+          (redoPressed)="redoPressed.emit()"
+        />
+
+        @if (showDensityToggle()) {
+          <button type="button" class="density" (click)="densityTogglePressed.emit()">
+            {{ ultraCompact() ? 'Compact' : 'Ultra-compact' }}
+          </button>
+        }
+      </div>
     </header>
   `,
   styles: `
@@ -29,6 +37,14 @@ import { FormatTimestampPipe } from '../../../../shared/pipes/format-timestamp.p
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
+      justify-content: space-between;
+    }
+
+    .toolbar__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
       justify-content: space-between;
     }
 
@@ -44,10 +60,27 @@ import { FormatTimestampPipe } from '../../../../shared/pipes/format-timestamp.p
       font-size: 0.9rem;
     }
 
+    .density {
+      min-height: 38px;
+      border-radius: 999px;
+      border: 0;
+      padding: 0.45rem 0.8rem;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.92rem;
+      background: #edf3f5;
+      color: #17475a;
+      white-space: nowrap;
+    }
+
     @media (min-width: 768px) {
       .toolbar {
         flex-direction: row;
         align-items: end;
+      }
+
+      .toolbar__actions {
+        justify-content: end;
       }
     }
   `,
@@ -58,6 +91,8 @@ export class CountToolbarComponent {
   readonly canUndo = input(false);
   readonly canRedo = input(false);
   readonly ultraCompact = input(false);
+  readonly showDensityToggle = input(false);
   readonly undoPressed = output<void>();
   readonly redoPressed = output<void>();
+  readonly densityTogglePressed = output<void>();
 }

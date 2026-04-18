@@ -5,8 +5,8 @@ import { Store } from '@ngrx/store';
 import { tap, withLatestFrom } from 'rxjs';
 
 import { StorageService } from '../../core/services/storage.service';
-import { selectDensityMode } from './ui.selectors';
-import { navigateToCountRoute, setDensityMode, toggleDensityMode } from './ui.actions';
+import { selectDefaultTotalBallots, selectDensityMode } from './ui.selectors';
+import { navigateToCountRoute, setDefaultTotalBallots, setDensityMode, toggleDensityMode } from './ui.actions';
 
 @Injectable()
 export class UiEffects {
@@ -21,6 +21,16 @@ export class UiEffects {
         ofType(toggleDensityMode, setDensityMode),
         withLatestFrom(this.store.select(selectDensityMode)),
         tap(([, mode]) => this.storage.saveDensityMode(mode)),
+      ),
+    { dispatch: false },
+  );
+
+  persistDefaultTotalBallots$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(setDefaultTotalBallots),
+        withLatestFrom(this.store.select(selectDefaultTotalBallots)),
+        tap(([, value]) => this.storage.saveDefaultTotalBallots(value)),
       ),
     { dispatch: false },
   );

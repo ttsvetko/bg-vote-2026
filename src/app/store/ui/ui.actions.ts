@@ -5,6 +5,10 @@ import { ConfirmDialogConfig, CountMode, UiDensityMode } from '../../core/models
 export const toggleShowAllParties = createAction('[UI] Toggle Show All Parties');
 export const toggleDensityMode = createAction('[UI] Toggle Density Mode');
 export const setDensityMode = createAction('[UI] Set Density Mode', props<{ mode: UiDensityMode }>());
+export const setDefaultTotalBallots = createAction(
+  '[UI] Set Default Total Ballots',
+  props<{ totalBallots: number | null }>(),
+);
 
 export const openConfirmDialog = createAction(
   '[UI] Open Confirm Dialog',

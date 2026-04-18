@@ -18,6 +18,7 @@ export const restoreDraftSession = createAction(
 
 export const incrementCount = createAction('[Session] Increment', props<{ key: string }>());
 export const decrementCount = createAction('[Session] Decrement', props<{ key: string }>());
+export const setTotalBallots = createAction('[Session] Set Total Ballots', props<{ totalBallots: number | null }>());
 export const undo = createAction('[Session] Undo');
 export const redo = createAction('[Session] Redo');
 export const saveDraft = createAction('[Session] Save Draft');

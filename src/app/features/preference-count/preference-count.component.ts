@@ -21,6 +21,7 @@ import {
   selectCurrentItems,
   selectTotalCount,
 } from '../../store/current-session/current-session.selectors';
+import { selectParties } from '../../store/reference-data/reference-data.selectors';
 import { openConfirmDialog, toggleDensityMode } from '../../store/ui/ui.actions';
 import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
 
@@ -38,21 +39,22 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
             [canUndo]="canUndo()"
             [canRedo]="canRedo()"
             [ultraCompact]="isUltraCompact()"
+            [showDensityToggle]="true"
             (undoPressed)="undoAction()"
             (redoPressed)="redoAction()"
+            (densityTogglePressed)="toggleDensity()"
           />
 
           <div class="screen__actions">
             <div class="screen__toggles">
-              <button type="button" class="button button--ghost density" (click)="toggleDensity()">
-                {{ isUltraCompact() ? 'Compact' : 'Ultra-compact' }}
-              </button>
               <div class="party-filter-row">
                 <label class="party-filter">
                   <select [value]="partyFilter()" (change)="changePartyFilter($event)">
                     <option value="all">Всички партии</option>
                     @for (party of availableParties(); track party.ballotNumber) {
-                      <option [value]="party.ballotNumber">{{ party.ballotNumber }} {{ party.shortName }}</option>
+                      <option [value]="party.ballotNumber">
+                        {{ party.ballotNumber }} {{ isUltraCompact() ? party.shortName : party.fullName }}
+                      </option>
                     }
                   </select>
                 </label>
@@ -277,6 +279,7 @@ export class PreferenceCountComponent {
   private readonly currentSession = this.store.selectSignal(selectCurrentSessionEntity);
   protected readonly partyFilter = signal<string>('all');
   private readonly currentItems = this.store.selectSignal(selectCurrentItems);
+  private readonly parties = this.store.selectSignal(selectParties);
 
   protected readonly total = this.store.selectSignal(selectTotalCount);
   protected readonly isUltraCompact = this.store.selectSignal(selectIsUltraCompact);
@@ -289,17 +292,24 @@ export class PreferenceCountComponent {
     (this.session()?.title ?? '').replace(/\s*\(всички партии\)/i, ''),
   );
   protected readonly availableParties = computed(() => {
-    const map = new Map<number, string>();
+    const partiesByNumber = new Map(this.parties().map((party) => [party.ballotNumber, party]));
+    const map = new Map<number, { shortName: string; fullName: string }>();
 
     for (const item of this.currentItems()) {
-      if (item.partyBallotNumber && item.partyShortName && !map.has(item.partyBallotNumber)) {
-        map.set(item.partyBallotNumber, item.partyShortName);
+      if (!item.partyBallotNumber || !item.partyShortName || map.has(item.partyBallotNumber)) {
+        continue;
       }
+
+      const party = partiesByNumber.get(item.partyBallotNumber);
+      map.set(item.partyBallotNumber, {
+        shortName: party?.shortName ?? item.partyShortName,
+        fullName: party?.fullName ?? item.partyShortName,
+      });
     }
 
     return [...map.entries()]
       .sort((a, b) => a[0] - b[0])
-      .map(([ballotNumber, shortName]) => ({ ballotNumber, shortName }));
+      .map(([ballotNumber, names]) => ({ ballotNumber, shortName: names.shortName, fullName: names.fullName }));
   });
   protected readonly items = computed(() => {
     const filter = this.partyFilter();

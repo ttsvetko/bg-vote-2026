@@ -46,6 +46,11 @@ export interface CountSession {
   finishedAt?: string;
   status: CountStatus;
   items: CounterItem[];
+  /**
+   * Optional "protocol total" entered manually by the user.
+   * Used to validate whether counted ballots match the expected total.
+   */
+  totalBallots?: number;
   notes?: string;
   electionId: string;
   dataVersion: string;
@@ -66,5 +71,6 @@ export interface ConfirmDialogConfig {
 export interface UiState {
   showAllParties: boolean;
   densityMode: UiDensityMode;
+  defaultTotalBallots: number | null;
   confirmDialog: ConfirmDialogConfig | null;
 }

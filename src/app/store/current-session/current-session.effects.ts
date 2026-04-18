@@ -18,6 +18,7 @@ import {
   restoreDraftSession,
   saveDraft,
   saveAndExitSession,
+  setTotalBallots,
   startBallotSession,
   startPreferenceSession,
   undo,
@@ -25,6 +26,7 @@ import {
 import { selectElection, selectParties, selectPreferenceLists } from '../reference-data/reference-data.selectors';
 import { addSession, updateSession } from '../session-history/session-history.actions';
 import { selectSessions } from '../session-history/session-history.selectors';
+import { selectDefaultTotalBallots } from '../ui/ui.selectors';
 
 const buildBallotItems = (parties: PartyDefinition[]): CounterItem[] =>
   parties.map((party) => ({
@@ -55,6 +57,7 @@ const buildSession = (
   items: CounterItem[],
   electionId: string,
   dataVersion: string,
+  totalBallots: number | null,
 ): CountSession => ({
   id: crypto.randomUUID(),
   mode,
@@ -62,6 +65,7 @@ const buildSession = (
   startedAt: new Date().toISOString(),
   status: 'draft',
   items,
+  ...(mode === 'ballots' && typeof totalBallots === 'number' ? { totalBallots } : {}),
   electionId,
   dataVersion,
 });
@@ -76,9 +80,13 @@ export class CurrentSessionEffects {
   startBallot$ = createEffect(() =>
     this.actions$.pipe(
       ofType(startBallotSession),
-      withLatestFrom(this.store.select(selectParties), this.store.select(selectElection)),
+      withLatestFrom(
+        this.store.select(selectParties),
+        this.store.select(selectElection),
+        this.store.select(selectDefaultTotalBallots),
+      ),
       filter(([, parties, election]) => parties.length > 0 && !!election),
-      map(([, parties, election]) =>
+      map(([, parties, election, defaultTotalBallots]) =>
         initializeSession({
           session: buildSession(
             'ballots',
@@ -86,6 +94,7 @@ export class CurrentSessionEffects {
             buildBallotItems(parties),
             election!.id,
             election!.dataVersion,
+            defaultTotalBallots,
           ),
         }),
       ),
@@ -116,6 +125,7 @@ export class CurrentSessionEffects {
             buildAllPreferenceItems(lists),
             election!.id,
             election!.dataVersion,
+            null,
           ),
         }),
       ),
@@ -136,7 +146,7 @@ export class CurrentSessionEffects {
   autosave$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(incrementCount, decrementCount, undo, redo),
+        ofType(incrementCount, decrementCount, undo, redo, setTotalBallots),
         debounceTime(500),
         withLatestFrom(this.store.select(selectCurrentSessionEntity)),
         filter(([, session]) => !!session),

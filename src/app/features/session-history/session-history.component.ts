@@ -8,11 +8,12 @@ import { deleteSession } from '../../store/session-history/session-history.actio
 import { selectSessionsSorted } from '../../store/session-history/session-history.selectors';
 import { openConfirmDialog } from '../../store/ui/ui.actions';
 import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
+import { SessionCardComponent } from '../../shared/components/session-card/session-card.component';
 
 @Component({
   selector: 'app-session-history',
   standalone: true,
-  imports: [CommonModule, FormatTimestampPipe],
+  imports: [CommonModule, FormatTimestampPipe, SessionCardComponent],
   template: `
     <section class="panel">
       <header class="panel__header">
@@ -28,21 +29,12 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       } @else {
         <div class="list">
           @for (session of sessions(); track session.id) {
-            <article class="list__item">
-              <div class="list__meta">
-                <strong>{{ session.title }}</strong>
-                <div class="list__times">
-                  <p><span>Старт:</span> {{ session.startedAt | formatTimestamp }}</p>
-                  <p><span>Край:</span> {{ session.finishedAt | formatTimestamp }}</p>
-                </div>
-              </div>
-
-              <div class="list__actions">
-                <button type="button" class="button button--ghost" (click)="openDetails(session.id)">Детайли</button>
-                <button type="button" class="button button--ghost" (click)="exportSession(session.id)">PDF</button>
-                <button type="button" class="button button--danger" (click)="confirmDelete(session.id, session.title)">Изтрий</button>
-              </div>
-            </article>
+            <app-session-card
+              [session]="session"
+              (detailsPressed)="openDetails($event.id)"
+              (pdfPressed)="exportSession($event.id)"
+              (deletePressed)="confirmDelete($event.id, $event.title)"
+            />
           }
         </div>
       }
@@ -58,8 +50,7 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       padding: 1.25rem;
     }
 
-    .panel__header,
-    .list__item {
+    .panel__header {
       display: flex;
       gap: 1rem;
       justify-content: space-between;
@@ -94,20 +85,6 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       gap: 0.8rem;
     }
 
-    .list__item {
-      padding: 1rem;
-      border-radius: 20px;
-      background: #f9fbfb;
-      border: 1px solid rgba(16, 72, 89, 0.08);
-    }
-
-    .list__times {
-      display: grid;
-      gap: 0.25rem;
-      margin-top: 0.4rem;
-    }
-
-    .list__times p,
     .empty {
       margin: 0;
       color: #526872;
@@ -115,63 +92,16 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       line-height: 1.25;
     }
 
-    .list__times span {
-      color: #17475a;
-      font-weight: 600;
-      font-size: 0.84rem;
-      letter-spacing: 0.01em;
-    }
-
-    .list__actions {
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    .button {
-      min-height: 44px;
-      border-radius: 999px;
-      border: 0;
-      padding: 0.8rem 1rem;
-      cursor: pointer;
-      font: inherit;
-      width: 100%;
-    }
-
-    .list__item strong,
-    h2 {
-      overflow-wrap: anywhere;
-    }
-
-    .button--ghost {
-      background: #edf3f5;
-      color: #17475a;
-    }
-
-    .button--danger {
-      background: #9f1d35;
-      color: #fff;
-    }
-
     @media (min-width: 768px) {
       .panel,
-      .list__item,
       .panel__header {
         padding: 1.5rem;
       }
 
       .panel__header,
-      .list__item {
+      .panel__header {
         flex-direction: row;
         align-items: center;
-      }
-
-      .list__actions {
-        display: flex;
-        flex-wrap: wrap;
-      }
-
-      .button {
-        width: auto;
       }
     }
   `,

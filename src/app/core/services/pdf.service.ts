@@ -28,9 +28,12 @@ export class PdfService {
     doc.text(`Сесия ID: ${session.id}`, 14, 36);
     doc.text(`Старт: ${session.startedAt.replace('T', ' ').slice(0, 19)}`, 14, 42);
     doc.text(`Край: ${finishedAt.replace('T', ' ').slice(0, 19)}`, 14, 48);
+    if (session.mode === 'ballots' && session.totalBallots !== undefined) {
+      doc.text(`Общо бюлетини (по протокол): ${session.totalBallots}`, 14, 54);
+    }
 
     autoTable(doc, {
-      startY: 58,
+      startY: session.mode === 'ballots' && session.totalBallots !== undefined ? 64 : 58,
       head: [['№', 'Позиция', 'Гласове', '%']],
       body: session.items.map((item) => [
         this.formatItemNumber(session, item),

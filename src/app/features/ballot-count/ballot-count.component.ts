@@ -39,18 +39,20 @@ import { selectIsUltraCompact, selectShowAllParties } from '../../store/ui/ui.se
             [canUndo]="canUndo()"
             [canRedo]="canRedo()"
             [ultraCompact]="isUltraCompact()"
+            [showDensityToggle]="true"
             (undoPressed)="undoAction()"
             (redoPressed)="redoAction()"
+            (densityTogglePressed)="toggleDensity()"
           />
 
           <div class="screen__actions">
             <div class="screen__toggles">
               <app-top5-toggle [showAll]="showAll()" [ultraCompact]="isUltraCompact()" (toggled)="toggleVisibleItems()" />
-              <button type="button" class="button button--ghost density" (click)="toggleDensity()">
-                {{ isUltraCompact() ? 'Compact' : 'Ultra-compact' }}
-              </button>
             </div>
-            <strong>Общо: {{ total() }} бюлетини</strong>
+            <div class="screen__totals">
+              <strong>Общо бюлетини: {{ formatTotalBallots(currentSession.totalBallots) }}</strong>
+              <strong>Преброени: {{ total() }}</strong>
+            </div>
           </div>
         </div>
 
@@ -118,6 +120,12 @@ import { selectIsUltraCompact, selectShowAllParties } from '../../store/ui/ui.se
       width: 100%;
     }
 
+    .screen__totals {
+      display: grid;
+      gap: 0.2rem;
+      align-items: start;
+    }
+
     .screen__list {
       display: grid;
       gap: 0.5rem;
@@ -152,10 +160,6 @@ import { selectIsUltraCompact, selectShowAllParties } from '../../store/ui/ui.se
     .button--ghost {
       background: #edf3f5;
       color: #17475a;
-    }
-
-    .density {
-      min-height: 38px;
     }
 
     .screen--ultra {
@@ -203,6 +207,11 @@ import { selectIsUltraCompact, selectShowAllParties } from '../../store/ui/ui.se
       .screen__toggles {
         display: inline-flex;
         width: auto;
+      }
+
+      .screen__totals {
+        text-align: right;
+        justify-items: end;
       }
 
       .footer__actions {
@@ -253,12 +262,25 @@ export class BallotCountComponent {
     this.store.dispatch(toggleDensityMode());
   }
 
+  protected formatTotalBallots(value: number | undefined): string {
+    if (value === undefined) {
+      return 'не е зададено';
+    }
+
+    return String(value);
+  }
+
   protected save(): void {
+    const counted = this.total();
+    const expected = this.session()?.totalBallots;
+    const mismatch = typeof expected === 'number' && expected !== counted;
+    const mismatchNote = mismatch ? ` Внимание: преброени ${counted}, общо бюлетини ${expected}.` : '';
+
     this.store.dispatch(
       openConfirmDialog({
         config: {
           title: 'Запазване на гласуването',
-          message: 'Сигурни ли сте, че искате да запазите текущото преброяване и да се върнете към таблото?',
+          message: `Сигурни ли сте, че искате да запазите текущото преброяване и да се върнете към таблото?${mismatchNote}`,
           confirmLabel: 'Запази',
           cancelLabel: 'Назад',
           confirmAction: saveAndExitSession.type,

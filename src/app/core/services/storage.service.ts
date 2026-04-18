@@ -8,6 +8,7 @@ const STORAGE_KEYS = {
   DRAFT_V2: 'bpc_draft_v2',
   DRAFT_V1: 'bpc_draft_v1',
   DENSITY_MODE: 'bpc_density_mode_v1',
+  DEFAULT_TOTAL_BALLOTS: 'bpc_default_total_ballots_v1',
 } as const;
 
 @Injectable({ providedIn: 'root' })
@@ -66,6 +67,29 @@ export class StorageService {
   loadDensityMode(): UiDensityMode {
     const raw = localStorage.getItem(STORAGE_KEYS.DENSITY_MODE);
     return raw === 'ultra' ? 'ultra' : 'compact';
+  }
+
+  saveDefaultTotalBallots(value: number | null): void {
+    if (value === null) {
+      localStorage.removeItem(STORAGE_KEYS.DEFAULT_TOTAL_BALLOTS);
+      return;
+    }
+
+    localStorage.setItem(STORAGE_KEYS.DEFAULT_TOTAL_BALLOTS, String(value));
+  }
+
+  loadDefaultTotalBallots(): number | null {
+    const raw = localStorage.getItem(STORAGE_KEYS.DEFAULT_TOTAL_BALLOTS);
+    if (!raw) {
+      return null;
+    }
+
+    const value = Number(raw);
+    if (!Number.isFinite(value) || value < 0) {
+      return null;
+    }
+
+    return Math.max(0, Math.trunc(value));
   }
 
   exportAll(): string {
