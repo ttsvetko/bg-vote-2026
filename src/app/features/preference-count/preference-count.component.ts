@@ -46,14 +46,19 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
             <button type="button" class="button button--ghost density" (click)="toggleDensity()">
               {{ isUltraCompact() ? 'Compact' : 'Ultra-compact' }}
             </button>
-            <label class="party-filter">
-              <select [value]="partyFilter()" (change)="changePartyFilter($event)">
-                <option value="all">Всички партии</option>
-                @for (party of availableParties(); track party.ballotNumber) {
-                  <option [value]="party.ballotNumber">{{ party.ballotNumber }} {{ party.shortName }}</option>
-                }
-              </select>
-            </label>
+            <div class="party-filter-row">
+              <label class="party-filter">
+                <select [value]="partyFilter()" (change)="changePartyFilter($event)">
+                  <option value="all">Всички партии</option>
+                  @for (party of availableParties(); track party.ballotNumber) {
+                    <option [value]="party.ballotNumber">{{ party.ballotNumber }} {{ party.shortName }}</option>
+                  }
+                </select>
+              </label>
+              <button type="button" class="button button--ghost clear-filter" (click)="clearPartyFilter()">
+                Изчисти
+              </button>
+            </div>
           </div>
           <strong>Общо преференции: {{ total() }}</strong>
         </div>
@@ -123,6 +128,18 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       width: 100%;
     }
 
+    .party-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      width: 100%;
+    }
+
+    .party-filter-row .party-filter {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
     .party-filter select {
       min-height: 38px;
       border-radius: 999px;
@@ -167,6 +184,13 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
 
     .density {
       min-height: 38px;
+    }
+
+    .clear-filter {
+      min-height: 38px;
+      width: auto;
+      white-space: nowrap;
+      flex: 0 0 auto;
     }
 
     .screen--ultra {
@@ -289,6 +313,10 @@ export class PreferenceCountComponent {
   protected changePartyFilter(event: Event): void {
     const target = event.target as HTMLSelectElement | null;
     this.partyFilter.set(target?.value ?? 'all');
+  }
+
+  protected clearPartyFilter(): void {
+    this.partyFilter.set('all');
   }
 
   protected save(): void {
