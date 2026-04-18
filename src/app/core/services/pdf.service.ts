@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-import { CountSession } from '../models';
+import { CounterItem, CountSession } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class PdfService {
@@ -33,7 +33,7 @@ export class PdfService {
       startY: 58,
       head: [['№', 'Позиция', 'Гласове', '%']],
       body: session.items.map((item) => [
-        item.ballotNumber,
+        this.formatItemNumber(session, item),
         item.label,
         item.count,
         this.formatPercent(item.count, total),
@@ -61,6 +61,14 @@ export class PdfService {
     doc.text('Само за целите на паралелното преброяване.', 14, finalY + 24);
 
     doc.save(`broene-${session.id}.pdf`);
+  }
+
+  private formatItemNumber(session: CountSession, item: CounterItem): string {
+    if (session.mode === 'preferences' && item.partyBallotNumber) {
+      return `${item.partyBallotNumber} / ${item.ballotNumber}`;
+    }
+
+    return String(item.ballotNumber);
   }
 
   private formatPercent(count: number, total: number): string {
