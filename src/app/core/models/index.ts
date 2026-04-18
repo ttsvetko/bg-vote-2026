@@ -1,5 +1,6 @@
 export type CountMode = 'ballots' | 'preferences';
 export type CountStatus = 'draft' | 'completed' | 'cancelled';
+export type UiDensityMode = 'compact' | 'ultra';
 
 export interface ElectionMeta {
   id: string;
@@ -59,5 +60,6 @@ export interface ConfirmDialogConfig {
 
 export interface UiState {
   showAllParties: boolean;
+  densityMode: UiDensityMode;
   confirmDialog: ConfirmDialogConfig | null;
 }

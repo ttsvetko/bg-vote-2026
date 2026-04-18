@@ -18,6 +18,7 @@ import { FormatTimestampPipe } from '../../../../shared/pipes/format-timestamp.p
       <app-undo-bar
         [canUndo]="canUndo()"
         [canRedo]="canRedo()"
+        [ultraCompact]="ultraCompact()"
         (undoPressed)="undoPressed.emit()"
         (redoPressed)="redoPressed.emit()"
       />
@@ -27,24 +28,26 @@ import { FormatTimestampPipe } from '../../../../shared/pipes/format-timestamp.p
     .toolbar {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.6rem;
       justify-content: space-between;
     }
 
     h2 {
-      margin: 0 0 0.35rem;
-      font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+      margin: 0 0 0.15rem;
+      font-size: clamp(1.2rem, 1.1vw + 0.95rem, 1.7rem);
+      line-height: 1.2;
     }
 
     p {
       margin: 0;
       color: #4d6670;
+      font-size: 0.9rem;
     }
 
     @media (min-width: 768px) {
       .toolbar {
         flex-direction: row;
-        align-items: start;
+        align-items: end;
       }
     }
   `,
@@ -54,6 +57,7 @@ export class CountToolbarComponent {
   readonly startedAt = input.required<string>();
   readonly canUndo = input(false);
   readonly canRedo = input(false);
+  readonly ultraCompact = input(false);
   readonly undoPressed = output<void>();
   readonly redoPressed = output<void>();
 }

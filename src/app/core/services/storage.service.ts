@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import { CountSession } from '../models';
+import { CountSession, UiDensityMode } from '../models';
 
 const STORAGE_KEYS = {
   SESSIONS_V2: 'bpc_sessions_v2',
   SESSIONS_V1: 'bpc_sessions_v1',
   DRAFT_V2: 'bpc_draft_v2',
   DRAFT_V1: 'bpc_draft_v1',
+  DENSITY_MODE: 'bpc_density_mode_v1',
 } as const;
 
 @Injectable({ providedIn: 'root' })
@@ -56,6 +57,15 @@ export class StorageService {
   clearDraft(): void {
     localStorage.removeItem(STORAGE_KEYS.DRAFT_V2);
     localStorage.removeItem(STORAGE_KEYS.DRAFT_V1);
+  }
+
+  saveDensityMode(mode: UiDensityMode): void {
+    localStorage.setItem(STORAGE_KEYS.DENSITY_MODE, mode);
+  }
+
+  loadDensityMode(): UiDensityMode {
+    const raw = localStorage.getItem(STORAGE_KEYS.DENSITY_MODE);
+    return raw === 'ultra' ? 'ultra' : 'compact';
   }
 
   exportAll(): string {

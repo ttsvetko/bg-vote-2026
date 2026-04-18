@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { CurrentSessionEffects } from './store/current-session/current-session.effects';
 import { ReferenceDataEffects } from './store/reference-data/reference-data.effects';
 import { SessionHistoryEffects } from './store/session-history/session-history.effects';
+import { UiEffects } from './store/ui/ui.effects';
 import { appReducers } from './store/app.state';
 
 export const appConfig: ApplicationConfig = {
@@ -21,6 +22,6 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: 'registerWhenStable:30000',
     }),
     provideStore(appReducers),
-    provideEffects(ReferenceDataEffects, CurrentSessionEffects, SessionHistoryEffects),
+    provideEffects(ReferenceDataEffects, CurrentSessionEffects, SessionHistoryEffects, UiEffects),
   ],
 };

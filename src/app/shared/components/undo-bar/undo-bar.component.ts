@@ -6,7 +6,7 @@ import { Component, input, output } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="undo-bar">
+    <div class="undo-bar" [class.undo-bar--ultra]="ultraCompact()">
       <button type="button" [disabled]="!canUndo()" (click)="undoPressed.emit()">↩ Undo</button>
       <button type="button" [disabled]="!canRedo()" (click)="redoPressed.emit()">↺ Redo</button>
     </div>
@@ -15,19 +15,20 @@ import { Component, input, output } from '@angular/core';
     .undo-bar {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
+      gap: 0.5rem;
       width: 100%;
     }
 
     button {
-      min-height: 44px;
+      min-height: 38px;
       border-radius: 999px;
       border: 1px solid rgba(16, 72, 89, 0.14);
       background: #fff;
       color: #17475a;
-      padding: 0.75rem 1rem;
+      padding: 0.45rem 0.8rem;
       cursor: pointer;
       font: inherit;
+      font-size: 0.92rem;
     }
 
     button:disabled {
@@ -41,11 +42,22 @@ import { Component, input, output } from '@angular/core';
         width: auto;
       }
     }
+
+    .undo-bar--ultra {
+      gap: 0.35rem;
+    }
+
+    .undo-bar--ultra button {
+      min-height: 34px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.84rem;
+    }
   `,
 })
 export class UndoBarComponent {
   readonly canUndo = input(false);
   readonly canRedo = input(false);
+  readonly ultraCompact = input(false);
   readonly undoPressed = output<void>();
   readonly redoPressed = output<void>();
 }

@@ -4,4 +4,6 @@ import { UiState } from '../../core/models';
 
 export const selectUi = createFeatureSelector<UiState>('ui');
 export const selectShowAllParties = createSelector(selectUi, (state) => state.showAllParties);
+export const selectDensityMode = createSelector(selectUi, (state) => state.densityMode);
+export const selectIsUltraCompact = createSelector(selectDensityMode, (mode) => mode === 'ultra');
 export const selectConfirmDialog = createSelector(selectUi, (state) => state.confirmDialog);

@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { loadReferenceData } from './store/reference-data/reference-data.actions';
 import { loadSessionsFromStorage } from './store/session-history/session-history.actions';
 import { selectConfirmDialog } from './store/ui/ui.selectors';
-import { closeConfirmDialog } from './store/ui/ui.actions';
+import { closeConfirmDialog, setDensityMode } from './store/ui/ui.actions';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { restoreDraftSession } from './store/current-session/current-session.actions';
 import { StorageService } from './core/services/storage.service';
@@ -156,6 +156,7 @@ export class AppComponent {
     this.store.dispatch(loadReferenceData());
     this.store.dispatch(loadSessionsFromStorage());
     this.store.dispatch(restoreDraftSession({ session: this.storage.loadDraft() }));
+    this.store.dispatch(setDensityMode({ mode: this.storage.loadDensityMode() }));
 
     effect(() => {
       const config = this.confirmDialog();
