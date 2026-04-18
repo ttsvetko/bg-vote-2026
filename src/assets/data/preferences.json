@@ -1,0 +1,654 @@
+[
+  {
+    "partyBallotNumber": 1,
+    "partyShortName": "ИТН",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Снежанка Райчова Траянска"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Румен Любенов Златковски"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Георги Руменов Павлов"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Лилия Василева Станчева"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Милен Пламенов Милчев"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Теменуга Нешова Калканова"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 2,
+    "partyShortName": "Пряка демокрация",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Йордан Георгиев Лазаров"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Станислав Илиев Кушев"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Олга Димитрова Борисова"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Живко Иванов Неделчев"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Емил Любомиров Трънкаров"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Петър Атанасов Василев"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 3,
+    "partyShortName": "Синя България",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Бойка Евлогиева Павлова"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Асен Георгиев Кирилов"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Пламен Иванов Петров"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Евгени Павлов Павлов"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Силвана Сотирова Рекарска"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Кирил Василев Кирилов"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Елена Йорданова Василева"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Юлиан Теодоров Бараков"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 4,
+    "partyShortName": "МЕЧ",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Росен Красимиров Иванов"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Росен Христов Андреев"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Тодор Валентинов Петров"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Ивайло Владков Гроздев"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 5,
+    "partyShortName": "БСП-ОЛ",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Иван Тодоров Ибришимов"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Милчо Атанасов Христов"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Станислав Христов Павлов"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Здравко Стойнев Милев"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Даниел Бойков Каратов"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Христо Сашов Цуцумански"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Евгени Емилов Тодоров"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Денислав Светославов Спасов"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 6,
+    "partyShortName": "НП ИСИ",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Димитър Стоянов Недялков"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Емил Каменов Марков"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 7,
+    "partyShortName": "ПП-ДБ",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Георги Николаев Стамов"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Крум Тодоров Бицов"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Павел Йорданов Михайлов"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Маня Славчова Мартинш"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Мария Николаева Мицова"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Димитър Йорданов Моралийски"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Александър Ангелов Петров"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Васил Христов Пандов"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 8,
+    "partyShortName": "Възраждане",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Димчо Димитров Димчев"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Мира-Йоанна Миркова Атанасова"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Мартин Василев Маринков"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Виктор Методиев Мантарков"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Теменужка Александрова Тодорова"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Марио Александров Мутафчиев"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Юлиян Йорданов Атанасов"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Христо Михайлов Стоичков"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 9,
+    "partyShortName": "Моя България",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Антон Георгиев Сираков"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Емил Ананиев Станоев"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Людмил Любенов Новков"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Нели Василева Спасова"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 10,
+    "partyShortName": "ДНК",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Димитър Вихъров Табачки"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Атанас Йорданов Пеудов"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 11,
+    "partyShortName": "АПС",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Николай Георгиев Цонев"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Марина Георгиева Палакарска"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Младен Гавриелов Апостолов"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Николина Красимирова Спасова"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Любомир Асенов Дамянов"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Симеон Росенов Биндер"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Михаил Георгиев Попов"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Валери Димитров Димитров"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 12,
+    "partyShortName": "Антикорупционен блок",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Ивелин Димитров Иванов"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Емил Димитров Нейков"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Даниел Николаев Зарев"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Любомир Иванов Стойков"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Румяна Станоева Първанова"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Светослав Асенов Салкин"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Александър Николов Пулев"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Ани Ангелова Вакъвчиева"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 13,
+    "partyShortName": "НД Непокорна България",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Десислава Георгиева Разсолкова"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Любослав Любомиров Ковачки"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Красимира Василева Стоянова"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Елица Димитрова Кочова"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Димитър Василев Василев"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 14,
+    "partyShortName": "Величие",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Йордан Атанасов Мицикулев"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Петър Димитров Кацарски"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Елка Панчова Анастасова"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Миле Стойнев Андонов"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Мирко Александров Борисов"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Светослав Руменов Кавдански"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Ивелина Петрова Николова"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Георги Владимиров Чараклиев"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 15,
+    "partyShortName": "ГЕРБ-СДС",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Христо Богомилов Терзийски"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Радослава Пламен Чеканска"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Владислав Руменов Паунов"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Елизабета Йорданова Иванова"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Денислав Владимиров Данаилов"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Марк Антонов Кюркчиев"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Богомил Асенов Костов"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Полина Светославова Милева"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 16,
+    "partyShortName": "Трети март",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Адриана Георгиева Брънчева-Драганова"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Десислава Георгиева Антонова"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "София Даниел Антонова"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Цветанка Борисова Коева"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 17,
+    "partyShortName": "ДПС",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Николай Георгиев Златарски"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Георги Томов Рангелов"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Татяна Грозданова Андонова"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Михаела Руменова Йорданова"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Мюретин Юмеров Алиев"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Цветан Александров Хлебарски"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Александър Василев Мутавчийски"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Милена Благоева Цекова"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 18,
+    "partyShortName": "Нация",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Владимир Миленков Трифкович"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Васил Георгиев Василев"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 19,
+    "partyShortName": "България може",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Виктор Петров Асенов"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Мирослав Пламенов Иванов"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 20,
+    "partyShortName": "Сияние",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Евгени Николаев Точев"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Симеон Маринов Трулев"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 21,
+    "partyShortName": "Прогресивна България",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Явор Илиев Гечев"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Ани Кирилова Кръстева"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Ивайло Валериев Петров"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Антон Ангелов Ангелов"
+      },
+      {
+        "preferenceNumber": 105,
+        "name": "Евтим Русалинов Малинов"
+      },
+      {
+        "preferenceNumber": 106,
+        "name": "Ивайло Иванов Григоров"
+      },
+      {
+        "preferenceNumber": 107,
+        "name": "Станислав Владимиров Горов"
+      },
+      {
+        "preferenceNumber": 108,
+        "name": "Борислав Пенчов Иванов"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 22,
+    "partyShortName": "Съпротива",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Величка Неделчова Георгиева"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Владимир Николов Живков"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 23,
+    "partyShortName": "Зелените",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Йонко Йорданов Гергов"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Петър Сашов Лазаров"
+      },
+      {
+        "preferenceNumber": 103,
+        "name": "Вероника Георгиева Георгиева"
+      },
+      {
+        "preferenceNumber": 104,
+        "name": "Васил Христов Павлов"
+      }
+    ]
+  },
+  {
+    "partyBallotNumber": 24,
+    "partyShortName": "Глас народен",
+    "candidates": [
+      {
+        "preferenceNumber": 101,
+        "name": "Явор Николаев Нанев"
+      },
+      {
+        "preferenceNumber": 102,
+        "name": "Стефан Радославов Цончев"
+      }
+    ]
+  }
+]
