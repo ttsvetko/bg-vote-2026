@@ -49,9 +49,10 @@ import { CounterItem } from '../../../../core/models';
     `
       .row {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
         gap: 0.55rem;
-        align-items: stretch;
         padding: 0.65rem 0.75rem;
         border-radius: 14px;
         background: rgba(255, 255, 255, 0.82);
@@ -60,8 +61,9 @@ import { CounterItem } from '../../../../core/models';
 
       .row__meta {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         gap: 0.55rem;
+        flex: 1 1 auto;
         min-width: 0;
       }
 
@@ -81,6 +83,7 @@ import { CounterItem } from '../../../../core/models';
       strong {
         font-size: 0.94rem;
         line-height: 1.2;
+        white-space: normal;
         overflow-wrap: anywhere;
       }
 
@@ -112,19 +115,8 @@ import { CounterItem } from '../../../../core/models';
         align-items: center;
         justify-content: flex-end;
         gap: 0.45rem;
-        align-self: flex-end;
-      }
-
-      @media (min-width: 480px) {
-        .row {
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .row__meta {
-          align-items: center;
-        }
+        align-self: center;
+        flex: 0 0 auto;
       }
 
       button {
@@ -148,6 +140,7 @@ import { CounterItem } from '../../../../core/models';
       .row--ultra {
         gap: 0.4rem;
         padding: 0.5rem 0.6rem;
+        align-items: center;
       }
 
       .row--ultra .row__meta {
