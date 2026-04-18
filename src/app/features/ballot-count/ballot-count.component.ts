@@ -32,24 +32,26 @@ import { selectIsUltraCompact, selectShowAllParties } from '../../store/ui/ui.se
   template: `
     @if (session(); as currentSession) {
       <section class="screen" [class.screen--ultra]="isUltraCompact()">
-        <app-count-toolbar
-          [title]="currentSession.title"
-          [startedAt]="currentSession.startedAt"
-          [canUndo]="canUndo()"
-          [canRedo]="canRedo()"
-          [ultraCompact]="isUltraCompact()"
-          (undoPressed)="undoAction()"
-          (redoPressed)="redoAction()"
-        />
+        <div class="screen__sticky">
+          <app-count-toolbar
+            [title]="currentSession.title"
+            [startedAt]="currentSession.startedAt"
+            [canUndo]="canUndo()"
+            [canRedo]="canRedo()"
+            [ultraCompact]="isUltraCompact()"
+            (undoPressed)="undoAction()"
+            (redoPressed)="redoAction()"
+          />
 
-        <div class="screen__actions">
-          <div class="screen__toggles">
-            <app-top5-toggle [showAll]="showAll()" [ultraCompact]="isUltraCompact()" (toggled)="toggleVisibleItems()" />
-            <button type="button" class="button button--ghost density" (click)="toggleDensity()">
-              {{ isUltraCompact() ? 'Compact' : 'Ultra-compact' }}
-            </button>
+          <div class="screen__actions">
+            <div class="screen__toggles">
+              <app-top5-toggle [showAll]="showAll()" [ultraCompact]="isUltraCompact()" (toggled)="toggleVisibleItems()" />
+              <button type="button" class="button button--ghost density" (click)="toggleDensity()">
+                {{ isUltraCompact() ? 'Compact' : 'Ultra-compact' }}
+              </button>
+            </div>
+            <strong>Общо: {{ total() }} бюлетини</strong>
           </div>
-          <strong>Общо: {{ total() }} бюлетини</strong>
         </div>
 
         <div class="screen__list">
@@ -95,6 +97,19 @@ import { selectIsUltraCompact, selectShowAllParties } from '../../store/ui/ui.se
       flex-direction: column;
       gap: 0.55rem;
       justify-content: space-between;
+    }
+
+    .screen__sticky {
+      position: sticky;
+      top: max(0.4rem, env(safe-area-inset-top));
+      z-index: 20;
+      display: grid;
+      gap: 0.55rem;
+      padding: 0.45rem 0.5rem;
+      border-radius: 14px;
+      background: rgba(247, 244, 234, 0.96);
+      border: 1px solid rgba(16, 72, 89, 0.1);
+      backdrop-filter: blur(2px);
     }
 
     .screen__toggles {
@@ -153,6 +168,12 @@ import { selectIsUltraCompact, selectShowAllParties } from '../../store/ui/ui.se
       gap: 0.4rem;
     }
 
+    .screen--ultra .screen__sticky {
+      gap: 0.4rem;
+      padding: 0.35rem 0.4rem;
+      border-radius: 12px;
+    }
+
     .screen--ultra .screen__list {
       gap: 0.35rem;
     }
@@ -167,6 +188,10 @@ import { selectIsUltraCompact, selectShowAllParties } from '../../store/ui/ui.se
       .screen,
       .empty-state {
         padding: 1rem 1.1rem;
+      }
+
+      .screen__sticky {
+        top: 0.75rem;
       }
 
       .screen__actions,

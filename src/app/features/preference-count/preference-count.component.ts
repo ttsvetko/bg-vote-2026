@@ -31,36 +31,38 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
   template: `
     @if (session(); as currentSession) {
       <section class="screen" [class.screen--ultra]="isUltraCompact()">
-        <app-count-toolbar
-          [title]="currentSession.title"
-          [startedAt]="currentSession.startedAt"
-          [canUndo]="canUndo()"
-          [canRedo]="canRedo()"
-          [ultraCompact]="isUltraCompact()"
-          (undoPressed)="undoAction()"
-          (redoPressed)="redoAction()"
-        />
+        <div class="screen__sticky">
+          <app-count-toolbar
+            [title]="currentSession.title"
+            [startedAt]="currentSession.startedAt"
+            [canUndo]="canUndo()"
+            [canRedo]="canRedo()"
+            [ultraCompact]="isUltraCompact()"
+            (undoPressed)="undoAction()"
+            (redoPressed)="redoAction()"
+          />
 
-        <div class="screen__actions">
-          <div class="screen__toggles">
-            <button type="button" class="button button--ghost density" (click)="toggleDensity()">
-              {{ isUltraCompact() ? 'Compact' : 'Ultra-compact' }}
-            </button>
-            <div class="party-filter-row">
-              <label class="party-filter">
-                <select [value]="partyFilter()" (change)="changePartyFilter($event)">
-                  <option value="all">Всички партии</option>
-                  @for (party of availableParties(); track party.ballotNumber) {
-                    <option [value]="party.ballotNumber">{{ party.ballotNumber }} {{ party.shortName }}</option>
-                  }
-                </select>
-              </label>
-              <button type="button" class="button button--ghost clear-filter" (click)="clearPartyFilter()">
-                Изчисти
+          <div class="screen__actions">
+            <div class="screen__toggles">
+              <button type="button" class="button button--ghost density" (click)="toggleDensity()">
+                {{ isUltraCompact() ? 'Compact' : 'Ultra-compact' }}
               </button>
+              <div class="party-filter-row">
+                <label class="party-filter">
+                  <select [value]="partyFilter()" (change)="changePartyFilter($event)">
+                    <option value="all">Всички партии</option>
+                    @for (party of availableParties(); track party.ballotNumber) {
+                      <option [value]="party.ballotNumber">{{ party.ballotNumber }} {{ party.shortName }}</option>
+                    }
+                  </select>
+                </label>
+                <button type="button" class="button button--ghost clear-filter" (click)="clearPartyFilter()">
+                  Изчисти
+                </button>
+              </div>
             </div>
+            <strong>Общо преференции: {{ total() }}</strong>
           </div>
-          <strong>Общо преференции: {{ total() }}</strong>
         </div>
 
         <div class="screen__list">
@@ -115,6 +117,19 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       flex-direction: column;
       gap: 0.55rem;
       justify-content: space-between;
+    }
+
+    .screen__sticky {
+      position: sticky;
+      top: max(0.4rem, env(safe-area-inset-top));
+      z-index: 20;
+      display: grid;
+      gap: 0.55rem;
+      padding: 0.45rem 0.5rem;
+      border-radius: 14px;
+      background: rgba(247, 244, 234, 0.96);
+      border: 1px solid rgba(16, 72, 89, 0.1);
+      backdrop-filter: blur(2px);
     }
 
     .screen__toggles {
@@ -203,6 +218,12 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       gap: 0.4rem;
     }
 
+    .screen--ultra .screen__sticky {
+      gap: 0.4rem;
+      padding: 0.35rem 0.4rem;
+      border-radius: 12px;
+    }
+
     .screen--ultra .screen__list {
       gap: 0.35rem;
     }
@@ -223,6 +244,10 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       .screen,
       .empty-state {
         padding: 1rem 1.1rem;
+      }
+
+      .screen__sticky {
+        top: 0.75rem;
       }
 
       .screen__actions,
