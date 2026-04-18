@@ -1,5 +1,5 @@
 [
-  { "ballotNumber": 1, "shortName": "ИТН", "fullName": "ПП ИМА ТАКЪВ НАРОД", "likelyTop10": true },
+  { "ballotNumber": 1, "shortName": "ИТН", "fullName": "ПП ИМА ТАКЪВ НАРОД", "likelyTop10": false },
   { "ballotNumber": 2, "shortName": "Пряка демокрация", "fullName": "ПРЯКА ДЕМОКРАЦИЯ", "likelyTop10": false },
   { "ballotNumber": 3, "shortName": "Синя България", "fullName": "СИНЯ БЪЛГАРИЯ", "likelyTop10": false },
   { "ballotNumber": 4, "shortName": "МЕЧ", "fullName": "ПП МЕЧ", "likelyTop10": true },
@@ -30,7 +30,7 @@
     "fullName": "АЛИАНС ЗА ПРАВА И СВОБОДИ – АПС",
     "likelyTop10": false
   },
-  { "ballotNumber": 12, "shortName": "Антикорупционен блок", "fullName": "АНТИКОРУПЦИОНЕН БЛОК", "likelyTop10": false },
+  { "ballotNumber": 12, "shortName": "Антикорупционен блок", "fullName": "АНТИКОРУПЦИОНЕН БЛОК", "likelyTop10": true },
   { "ballotNumber": 13, "shortName": "НД Непокорна България", "fullName": "НД НЕПОКОРНА БЪЛГАРИЯ", "likelyTop10": false },
   { "ballotNumber": 14, "shortName": "Величие", "fullName": "ПП ВЕЛИЧИЕ", "likelyTop10": false },
   { "ballotNumber": 15, "shortName": "ГЕРБ-СДС", "fullName": "ГЕРБ-СДС", "likelyTop10": true },
