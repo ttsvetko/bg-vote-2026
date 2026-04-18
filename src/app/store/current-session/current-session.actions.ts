@@ -4,10 +4,7 @@ import { CountSession } from '../../core/models';
 
 export const startBallotSession = createAction('[Session] Start Ballot Count');
 
-export const startPreferenceSession = createAction(
-  '[Session] Start Preference Count',
-  props<{ partyBallotNumber: number }>(),
-);
+export const startPreferenceSession = createAction('[Session] Start Preference Count');
 
 export const initializeSession = createAction(
   '[Session] Initialize',

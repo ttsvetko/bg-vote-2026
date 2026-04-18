@@ -20,7 +20,7 @@ import { PartyDefinition } from '../../../../core/models';
     </label>
 
     <button type="button" class="selector__button" [disabled]="selectedBallotNumber() === null" (click)="start.emit(selectedBallotNumber()!)">
-      Започни броене на преференции
+      Започни броене (всички партии)
     </button>
   `,
   styles: `

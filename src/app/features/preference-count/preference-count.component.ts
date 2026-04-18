@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { PartySelectorComponent } from './components/party-selector/party-selector.component';
 import { PreferenceRowComponent } from './components/preference-row/preference-row.component';
 import { CountToolbarComponent } from '../ballot-count/components/count-toolbar/count-toolbar.component';
 import {
@@ -23,17 +21,16 @@ import {
   selectCurrentItems,
   selectTotalCount,
 } from '../../store/current-session/current-session.selectors';
-import { selectPartiesWithPreferenceLists } from '../../store/reference-data/reference-data.selectors';
 import { openConfirmDialog, toggleDensityMode } from '../../store/ui/ui.actions';
 import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
 
 @Component({
   selector: 'app-preference-count',
   standalone: true,
-  imports: [CommonModule, PartySelectorComponent, PreferenceRowComponent, CountToolbarComponent],
+  imports: [CommonModule, PreferenceRowComponent, CountToolbarComponent],
   template: `
-    <section class="screen" [class.screen--ultra]="isUltraCompact()">
-      @if (session(); as currentSession) {
+    @if (session(); as currentSession) {
+      <section class="screen" [class.screen--ultra]="isUltraCompact()">
         <app-count-toolbar
           [title]="currentSession.title"
           [startedAt]="currentSession.startedAt"
@@ -49,6 +46,14 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
             <button type="button" class="button button--ghost density" (click)="toggleDensity()">
               {{ isUltraCompact() ? 'Compact' : 'Ultra-compact' }}
             </button>
+            <label class="party-filter">
+              <select [value]="partyFilter()" (change)="changePartyFilter($event)">
+                <option value="all">Всички партии</option>
+                @for (party of availableParties(); track party.ballotNumber) {
+                  <option [value]="party.ballotNumber">{{ party.ballotNumber }} {{ party.shortName }}</option>
+                }
+              </select>
+            </label>
           </div>
           <strong>Общо преференции: {{ total() }}</strong>
         </div>
@@ -71,40 +76,23 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
             <button type="button" class="button button--primary" (click)="complete()">Приключи</button>
           </div>
         </footer>
-      } @else {
-        <div class="selector-panel">
-          <div>
-            <p class="eyebrow">Стъпка 1</p>
-            <h2>Избери партия за преференциално броене</h2>
-          </div>
-
-          <app-party-selector [parties]="parties()" (start)="startSession($event)" />
-        </div>
-      }
-    </section>
+      </section>
+    } @else {
+      <section class="empty-state">
+        <h2>Няма активна сесия за преференции</h2>
+        <button type="button" class="button button--primary" (click)="startSession()">Започни броене</button>
+      </section>
+    }
   `,
   styles: `
-    .screen {
+    .screen,
+    .empty-state {
       display: grid;
       gap: 0.65rem;
       background: rgba(255, 255, 255, 0.86);
       border: 1px solid rgba(16, 72, 89, 0.08);
       border-radius: 20px;
       padding: 0.8rem 0.9rem;
-    }
-
-    .selector-panel {
-      display: grid;
-      gap: 0.65rem;
-      padding: 0.1rem;
-    }
-
-    .eyebrow {
-      margin: 0 0 0.35rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.75rem;
-      color: #8a5a1f;
     }
 
     h2 {
@@ -128,6 +116,22 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       display: grid;
       gap: 0.4rem;
       width: 100%;
+    }
+
+    .party-filter {
+      display: grid;
+      width: 100%;
+    }
+
+    .party-filter select {
+      min-height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(16, 72, 89, 0.16);
+      padding: 0.35rem 0.8rem;
+      font: inherit;
+      font-size: 0.92rem;
+      background: #fff;
+      color: #17475a;
     }
 
     .footer__actions {
@@ -185,8 +189,15 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       font-size: 0.84rem;
     }
 
+    .screen--ultra .party-filter select {
+      min-height: 34px;
+      font-size: 0.84rem;
+      padding: 0.25rem 0.65rem;
+    }
+
     @media (min-width: 768px) {
-      .screen {
+      .screen,
+      .empty-state {
         padding: 1rem 1.1rem;
       }
 
@@ -214,11 +225,10 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
 })
 export class PreferenceCountComponent {
   private readonly store = inject(Store);
-  private readonly router = inject(Router);
   private readonly currentSession = this.store.selectSignal(selectCurrentSessionEntity);
+  protected readonly partyFilter = signal<string>('all');
+  private readonly currentItems = this.store.selectSignal(selectCurrentItems);
 
-  protected readonly parties = this.store.selectSignal(selectPartiesWithPreferenceLists);
-  protected readonly items = this.store.selectSignal(selectCurrentItems);
   protected readonly total = this.store.selectSignal(selectTotalCount);
   protected readonly isUltraCompact = this.store.selectSignal(selectIsUltraCompact);
   protected readonly canUndo = this.store.selectSignal(selectCanUndo);
@@ -226,9 +236,34 @@ export class PreferenceCountComponent {
   protected readonly session = computed(() =>
     this.currentSession()?.mode === 'preferences' ? this.currentSession() : null,
   );
+  protected readonly availableParties = computed(() => {
+    const map = new Map<number, string>();
 
-  protected startSession(partyBallotNumber: number): void {
-    this.store.dispatch(startPreferenceSession({ partyBallotNumber }));
+    for (const item of this.currentItems()) {
+      if (item.partyBallotNumber && item.partyShortName && !map.has(item.partyBallotNumber)) {
+        map.set(item.partyBallotNumber, item.partyShortName);
+      }
+    }
+
+    return [...map.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([ballotNumber, shortName]) => ({ ballotNumber, shortName }));
+  });
+  protected readonly items = computed(() => {
+    const filter = this.partyFilter();
+    const all = this.currentItems();
+    const filtered = filter === 'all' ? all : all.filter((item) => item.partyBallotNumber === Number(filter));
+
+    return [...filtered].sort(
+      (a, b) =>
+        (a.partyBallotNumber ?? Number.MAX_SAFE_INTEGER) - (b.partyBallotNumber ?? Number.MAX_SAFE_INTEGER) ||
+        a.ballotNumber - b.ballotNumber,
+    );
+  });
+
+  protected startSession(): void {
+    this.store.dispatch(startPreferenceSession());
+    this.partyFilter.set('all');
   }
 
   protected incrementAction(key: string): void {
@@ -249,6 +284,11 @@ export class PreferenceCountComponent {
 
   protected toggleDensity(): void {
     this.store.dispatch(toggleDensityMode());
+  }
+
+  protected changePartyFilter(event: Event): void {
+    const target = event.target as HTMLSelectElement | null;
+    this.partyFilter.set(target?.value ?? 'all');
   }
 
   protected save(): void {

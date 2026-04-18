@@ -39,9 +39,15 @@ const buildPreferenceItems = (list: PreferenceListDefinition): CounterItem[] =>
   list.candidates.map((candidate) => ({
     key: `pref-${list.partyBallotNumber}-${String(candidate.preferenceNumber).padStart(3, '0')}`,
     label: candidate.name,
+    subtitle: `${list.partyBallotNumber} ${list.partyShortName}`,
     ballotNumber: candidate.preferenceNumber,
+    partyBallotNumber: list.partyBallotNumber,
+    partyShortName: list.partyShortName,
     count: 0,
   }));
+
+const buildAllPreferenceItems = (lists: PreferenceListDefinition[]): CounterItem[] =>
+  lists.flatMap((list) => buildPreferenceItems(list));
 
 const buildSession = (
   mode: CountMode,
@@ -90,17 +96,13 @@ export class CurrentSessionEffects {
     this.actions$.pipe(
       ofType(startPreferenceSession),
       withLatestFrom(this.store.select(selectPreferenceLists), this.store.select(selectElection)),
-      map(([{ partyBallotNumber }, lists, election]) => ({
-        list: lists.find((entry) => entry.partyBallotNumber === partyBallotNumber) ?? null,
-        election,
-      })),
-      filter(({ list, election }) => !!list && !!election),
-      map(({ list, election }) =>
+      filter(([, lists, election]) => lists.length > 0 && !!election),
+      map(([, lists, election]) =>
         initializeSession({
           session: buildSession(
             'preferences',
-            `Преференции ${list!.partyShortName} - ${new Date().toLocaleTimeString('bg-BG', { hour: '2-digit', minute: '2-digit' })}`,
-            buildPreferenceItems(list!),
+            `Преференции (всички партии) - ${new Date().toLocaleTimeString('bg-BG', { hour: '2-digit', minute: '2-digit' })}`,
+            buildAllPreferenceItems(lists),
             election!.id,
             election!.dataVersion,
           ),

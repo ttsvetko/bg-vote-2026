@@ -10,8 +10,32 @@ import { CounterItem } from '../../../../core/models';
   template: `
     <article class="row" [class.row--ultra]="ultraCompact()">
       <div class="row__meta">
-        <span class="row__number">{{ item().ballotNumber | number: '3.0' }}</span>
-        <strong>{{ item().label }}</strong>
+        <div class="row__numbers">
+          @if (item().partyBallotNumber; as partyNo) {
+            <span
+              class="row__number row__number--party"
+              [style.background]="partyBadgeStyle(partyNo).background"
+              [style.color]="partyBadgeStyle(partyNo).color"
+            >
+              {{ partyNo }}
+            </span>
+            <span
+              class="row__number"
+              [style.background]="partyBadgeStyle(partyNo).background"
+              [style.color]="partyBadgeStyle(partyNo).color"
+            >
+              {{ item().ballotNumber | number: '3.0' }}
+            </span>
+          } @else {
+            <span class="row__number">{{ item().ballotNumber | number: '3.0' }}</span>
+          }
+        </div>
+        <div class="row__text">
+          <strong>{{ item().label }}</strong>
+          @if (item().subtitle) {
+            <small>{{ item().subtitle }}</small>
+          }
+        </div>
       </div>
 
       <div class="row__controls">
@@ -41,14 +65,34 @@ import { CounterItem } from '../../../../core/models';
         min-width: 0;
       }
 
+      .row__numbers {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        flex: 0 0 auto;
+      }
+
+      .row__text {
+        display: grid;
+        gap: 0.08rem;
+        min-width: 0;
+      }
+
       strong {
         font-size: 0.94rem;
         line-height: 1.2;
         overflow-wrap: anywhere;
       }
 
+      small {
+        color: #526872;
+        font-size: 0.75rem;
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+      }
+
       .row__number {
-        width: 2.65rem;
+        min-width: 2.65rem;
         height: 1.9rem;
         border-radius: 999px;
         display: grid;
@@ -57,6 +101,10 @@ import { CounterItem } from '../../../../core/models';
         color: #5f3d10;
         flex: 0 0 auto;
         font-size: 0.78rem;
+      }
+
+      .row__number--party {
+        min-width: 1.9rem;
       }
 
       .row__controls {
@@ -110,10 +158,18 @@ import { CounterItem } from '../../../../core/models';
         font-size: 0.88rem;
       }
 
+      .row--ultra small {
+        font-size: 0.7rem;
+      }
+
       .row--ultra .row__number {
-        width: 2.4rem;
+        min-width: 2.4rem;
         height: 1.75rem;
         font-size: 0.72rem;
+      }
+
+      .row--ultra .row__number--party {
+        min-width: 1.7rem;
       }
 
       .row--ultra .row__controls {
@@ -137,4 +193,19 @@ export class PreferenceRowComponent {
   readonly ultraCompact = input(false);
   readonly increment = output<string>();
   readonly decrement = output<string>();
+
+  protected partyBadgeStyle(partyBallotNumber: number): { background: string; color: string } {
+    const palette = [
+      { background: '#dff3ff', color: '#0d3c5f' },
+      { background: '#e7f7e7', color: '#154c1a' },
+      { background: '#fff0d9', color: '#6d3a00' },
+      { background: '#fde2ec', color: '#6f1938' },
+      { background: '#ece9ff', color: '#36266c' },
+      { background: '#dff7f4', color: '#0d4b42' },
+      { background: '#ffe8e2', color: '#6c2b1a' },
+      { background: '#f0f4d9', color: '#42500d' },
+    ];
+
+    return palette[Math.abs(partyBallotNumber) % palette.length] ?? palette[0];
+  }
 }

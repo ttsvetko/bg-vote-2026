@@ -33,6 +33,8 @@ export interface CounterItem {
   label: string;
   subtitle?: string;
   ballotNumber: number;
+  partyBallotNumber?: number;
+  partyShortName?: string;
   count: number;
 }
 

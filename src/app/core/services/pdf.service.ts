@@ -8,6 +8,10 @@ import { CountSession } from '../models';
 export class PdfService {
   private fontData: string | null = null;
   private fontLoading: Promise<string | null> | null = null;
+  private readonly percentageFormatter = new Intl.NumberFormat('bg-BG', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   async generateSessionReport(session: CountSession): Promise<void> {
     const doc = new jsPDF();
@@ -27,9 +31,14 @@ export class PdfService {
 
     autoTable(doc, {
       startY: 58,
-      head: [['№', 'Позиция', 'Гласове']],
-      body: session.items.map((item) => [item.ballotNumber, item.label, item.count]),
-      foot: [['', 'ОБЩО', total]],
+      head: [['№', 'Позиция', 'Гласове', '%']],
+      body: session.items.map((item) => [
+        item.ballotNumber,
+        item.label,
+        item.count,
+        this.formatPercent(item.count, total),
+      ]),
+      foot: [['', 'ОБЩО', total, total > 0 ? '100,00%' : '0,00%']],
       theme: 'grid',
       styles: {
         font: this.fontData ? 'DejaVuSans' : 'helvetica',
@@ -52,6 +61,14 @@ export class PdfService {
     doc.text('Само за целите на паралелното преброяване.', 14, finalY + 24);
 
     doc.save(`broene-${session.id}.pdf`);
+  }
+
+  private formatPercent(count: number, total: number): string {
+    if (total <= 0) {
+      return '0,00%';
+    }
+
+    return `${this.percentageFormatter.format((count / total) * 100)}%`;
   }
 
   private async ensureFont(doc: jsPDF): Promise<void> {

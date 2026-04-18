@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { PdfService } from '../../core/services/pdf.service';
 import { selectCurrentSessionEntity } from '../../store/current-session/current-session.selectors';
-import { startBallotSession } from '../../store/current-session/current-session.actions';
+import { startBallotSession, startPreferenceSession } from '../../store/current-session/current-session.actions';
 import { selectElection } from '../../store/reference-data/reference-data.selectors';
 import { deleteSession } from '../../store/session-history/session-history.actions';
 import { selectSessionsSorted } from '../../store/session-history/session-history.selectors';
@@ -243,6 +243,7 @@ export class DashboardComponent {
   }
 
   protected goToPreferences(): void {
+    this.store.dispatch(startPreferenceSession());
     void this.router.navigateByUrl('/preference-count');
   }
 

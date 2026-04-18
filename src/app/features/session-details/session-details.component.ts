@@ -31,6 +31,7 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
           <div><dt>Край</dt><dd>{{ currentSession.finishedAt | formatTimestamp }}</dd></div>
           <div><dt>Статус</dt><dd>{{ currentSession.status }}</dd></div>
           <div><dt>Сесия ID</dt><dd>{{ currentSession.id }}</dd></div>
+          <div><dt>Общо бюлетини</dt><dd>{{ totalCount() }}</dd></div>
         </dl>
 
         <div class="sort">
@@ -49,7 +50,10 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
                 <span>{{ item.ballotNumber }}</span>
                 <strong>{{ item.label }}</strong>
               </div>
-              <output>{{ item.count }}</output>
+              <div class="list__result">
+                <output>{{ item.count }}</output>
+                <small>{{ formatPercent(item.count) }}</small>
+              </div>
             </article>
           }
         </div>
@@ -183,6 +187,17 @@ import { FormatTimestampPipe } from '../../shared/pipes/format-timestamp.pipe';
       font-weight: 700;
     }
 
+    .list__result {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.6rem;
+    }
+
+    .list__result small {
+      color: #526872;
+      font-weight: 600;
+    }
+
     .button {
       min-height: 44px;
       border-radius: 999px;
@@ -249,8 +264,16 @@ export class SessionDetailsComponent {
   private readonly pdf = inject(PdfService);
   private readonly id = this.route.snapshot.paramMap.get('id') ?? '';
   protected readonly sortMode = signal<'ballot' | 'votesDesc' | 'votesAsc'>('ballot');
+  private readonly percentageFormatter = new Intl.NumberFormat('bg-BG', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   protected readonly session = this.store.selectSignal(selectSessionById(this.id));
+  protected readonly totalCount = computed(() => {
+    const session = this.session();
+    return session ? session.items.reduce((sum, item) => sum + item.count, 0) : 0;
+  });
   protected readonly sortedItems = computed(() => {
     const session = this.session();
     const items = session ? [...session.items] : [];
@@ -274,6 +297,16 @@ export class SessionDetailsComponent {
     if (value === 'votesDesc' || value === 'votesAsc' || value === 'ballot') {
       this.sortMode.set(value);
     }
+  }
+
+  protected formatPercent(count: number): string {
+    const total = this.totalCount();
+
+    if (total <= 0) {
+      return '0,00%';
+    }
+
+    return `${this.percentageFormatter.format((count / total) * 100)}%`;
   }
 
   protected async export(): Promise<void> {
