@@ -41,11 +41,10 @@ import { FormatTimestampPipe } from '../../../../shared/pipes/format-timestamp.p
     }
 
     .toolbar__actions {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr;
       gap: 0.5rem;
       align-items: center;
-      justify-content: space-between;
     }
 
     h2 {
@@ -71,6 +70,24 @@ import { FormatTimestampPipe } from '../../../../shared/pipes/format-timestamp.p
       background: #edf3f5;
       color: #17475a;
       white-space: nowrap;
+      max-width: 100%;
+    }
+
+    @media (max-width: 360px) {
+      .density {
+        width: 100%;
+        white-space: normal;
+      }
+    }
+
+    @media (min-width: 420px) {
+      .toolbar__actions {
+        grid-template-columns: 1fr auto;
+      }
+
+      .density {
+        justify-self: end;
+      }
     }
 
     @media (min-width: 768px) {
@@ -80,6 +97,7 @@ import { FormatTimestampPipe } from '../../../../shared/pipes/format-timestamp.p
       }
 
       .toolbar__actions {
+        grid-template-columns: auto auto;
         justify-content: end;
       }
     }

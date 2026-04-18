@@ -32,8 +32,8 @@ import { CounterItem } from '../../../../core/models';
         </div>
         <div class="row__text">
           <strong>{{ item().label }}</strong>
-          @if (item().subtitle) {
-            <small>{{ item().subtitle }}</small>
+          @if (subtitleText(); as subtitle) {
+            <small>{{ subtitle }}</small>
           }
         </div>
       </div>
@@ -48,10 +48,9 @@ import { CounterItem } from '../../../../core/models';
   styles: [
     `
       .row {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: start;
         gap: 0.55rem;
         padding: 0.65rem 0.75rem;
         border-radius: 14px;
@@ -115,7 +114,7 @@ import { CounterItem } from '../../../../core/models';
         align-items: center;
         justify-content: flex-end;
         gap: 0.45rem;
-        align-self: center;
+        justify-self: end;
         flex: 0 0 auto;
       }
 
@@ -138,9 +137,12 @@ import { CounterItem } from '../../../../core/models';
       }
 
       .row--ultra {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
         gap: 0.4rem;
         padding: 0.5rem 0.6rem;
-        align-items: center;
       }
 
       .row--ultra .row__meta {
@@ -167,6 +169,7 @@ import { CounterItem } from '../../../../core/models';
 
       .row--ultra .row__controls {
         gap: 0.35rem;
+        justify-self: auto;
       }
 
       .row--ultra button {
@@ -184,8 +187,30 @@ import { CounterItem } from '../../../../core/models';
 export class PreferenceRowComponent {
   readonly item = input.required<CounterItem>();
   readonly ultraCompact = input(false);
+  readonly partyFullNameByNumber = input<Map<number, string> | null>(null);
   readonly increment = output<string>();
   readonly decrement = output<string>();
+
+  protected subtitleText(): string | null {
+    const item = this.item();
+    const subtitle = item.subtitle;
+
+    if (this.ultraCompact()) {
+      return subtitle ?? null;
+    }
+
+    const partyNo = item.partyBallotNumber;
+    if (!partyNo) {
+      return subtitle ?? null;
+    }
+
+    const fullName = this.partyFullNameByNumber()?.get(partyNo);
+    if (fullName) {
+      return `${partyNo} ${fullName}`;
+    }
+
+    return subtitle ?? String(partyNo);
+  }
 
   protected partyBadgeStyle(partyBallotNumber: number): { background: string; color: string } {
     const palette = [

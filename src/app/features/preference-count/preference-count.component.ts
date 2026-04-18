@@ -72,6 +72,7 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
             <app-preference-row
               [item]="item"
               [ultraCompact]="isUltraCompact()"
+              [partyFullNameByNumber]="partyFullNameByNumber()"
               (increment)="incrementAction($event)"
               (decrement)="decrementAction($event)"
             />
@@ -102,6 +103,7 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       border: 1px solid rgba(16, 72, 89, 0.08);
       border-radius: 20px;
       padding: 0.8rem 0.9rem;
+      overflow-x: hidden;
     }
 
     h2 {
@@ -147,6 +149,7 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
 
     .party-filter-row {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       gap: 0.4rem;
       width: 100%;
@@ -158,6 +161,9 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
     }
 
     .party-filter select {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
       min-height: 38px;
       border-radius: 999px;
       border: 1px solid rgba(16, 72, 89, 0.16);
@@ -166,6 +172,8 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       font-size: 0.92rem;
       background: #fff;
       color: #17475a;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .footer__actions {
@@ -208,6 +216,12 @@ import { selectIsUltraCompact } from '../../store/ui/ui.selectors';
       width: auto;
       white-space: nowrap;
       flex: 0 0 auto;
+    }
+
+    @media (max-width: 420px) {
+      .clear-filter {
+        width: 100%;
+      }
     }
 
     .screen--ultra {
@@ -280,6 +294,9 @@ export class PreferenceCountComponent {
   protected readonly partyFilter = signal<string>('all');
   private readonly currentItems = this.store.selectSignal(selectCurrentItems);
   private readonly parties = this.store.selectSignal(selectParties);
+  protected readonly partyFullNameByNumber = computed(
+    () => new Map(this.parties().map((party) => [party.ballotNumber, party.fullName] as const)),
+  );
 
   protected readonly total = this.store.selectSignal(selectTotalCount);
   protected readonly isUltraCompact = this.store.selectSignal(selectIsUltraCompact);
