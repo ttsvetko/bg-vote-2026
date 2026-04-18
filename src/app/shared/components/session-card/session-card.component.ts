@@ -24,8 +24,8 @@ import { FormatTimestampPipe } from '../../pipes/format-timestamp.pipe';
       </div>
 
       <div class="card__actions">
-        <button type="button" class="button button--ghost" (click)="detailsPressed.emit(session())">Детайли</button>
-        <button type="button" class="button button--ghost" (click)="pdfPressed.emit(session())">PDF</button>
+        <button type="button" class="button button--primary" (click)="detailsPressed.emit(session())">Детайли</button>
+        <button type="button" class="button button--secondary" (click)="pdfPressed.emit(session())">PDF</button>
         <button type="button" class="button button--danger" (click)="deletePressed.emit(session())">Изтрий</button>
       </div>
     </article>
@@ -45,6 +45,12 @@ import { FormatTimestampPipe } from '../../pipes/format-timestamp.pipe';
     .card--mismatch {
       background: #fff2f2;
       border-color: rgba(159, 29, 53, 0.28);
+    }
+
+    .card__actions {
+      display: grid;
+      gap: 0.6rem;
+      width: 100%;
     }
 
     .card__times {
@@ -85,9 +91,14 @@ import { FormatTimestampPipe } from '../../pipes/format-timestamp.pipe';
       width: 100%;
     }
 
-    .button--ghost {
-      background: #edf3f5;
-      color: #17475a;
+    .button--primary {
+      background: #104859;
+      color: #fff;
+    }
+
+    .button--secondary {
+      background: #f0dcb0;
+      color: #5f3d10;
     }
 
     .button--danger {
@@ -105,6 +116,7 @@ import { FormatTimestampPipe } from '../../pipes/format-timestamp.pipe';
         display: flex;
         flex-wrap: wrap;
         gap: 0.75rem;
+        width: auto;
       }
 
       .button {
@@ -131,4 +143,3 @@ export class SessionCardComponent {
     return this.totalCount() !== session.totalBallots;
   });
 }
-
